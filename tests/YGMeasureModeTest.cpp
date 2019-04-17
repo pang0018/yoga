@@ -6,14 +6,14 @@
  */
 
 #include <gtest/gtest.h>
-#include <yoga/YGNode.h>
-#include <yoga/Yoga.h>
+#include <bindyoga/BNDYGNode.h>
+#include <bindyoga/BindYoga.h>
 
 struct _MeasureConstraint {
   float width;
-  YGMeasureMode widthMode;
+  BNDYGMeasureMode widthMode;
   float height;
-  YGMeasureMode heightMode;
+  BNDYGMeasureMode heightMode;
 };
 
 struct _MeasureConstraintList {
@@ -21,11 +21,11 @@ struct _MeasureConstraintList {
   struct _MeasureConstraint *constraints;
 };
 
-static YGSize _measure(YGNodeRef node,
+static BNDYGSize _measure(BNDYGNodeRef node,
                        float width,
-                       YGMeasureMode widthMode,
+                       BNDYGMeasureMode widthMode,
                        float height,
-                       YGMeasureMode heightMode) {
+                       BNDYGMeasureMode heightMode) {
   struct _MeasureConstraintList* constraintList =
       (struct _MeasureConstraintList*)node->getContext();
   struct _MeasureConstraint *constraints = constraintList->constraints;
@@ -36,9 +36,9 @@ static YGSize _measure(YGNodeRef node,
   (&constraints[currentIndex])->heightMode = heightMode;
   constraintList->length = currentIndex + 1;
 
-  return YGSize{
-      .width = widthMode == YGMeasureModeUndefined ? 10 : width,
-      .height = heightMode == YGMeasureModeUndefined ? 10 : width,
+  return BNDYGSize{
+      .width = widthMode == BNDYGMeasureModeUndefined ? 10 : width,
+      .height = heightMode == BNDYGMeasureModeUndefined ? 10 : width,
   };
 }
 
@@ -48,26 +48,26 @@ TEST(YogaTest, exactly_measure_stretched_child_column) {
       .constraints = (struct _MeasureConstraint *) malloc(10 * sizeof(struct _MeasureConstraint)),
   };
 
-  const YGNodeRef root = YGNodeNew();
-  YGNodeStyleSetWidth(root, 100);
-  YGNodeStyleSetHeight(root, 100);
+  const BNDYGNodeRef root = BNDYGNodeNew();
+  BNDYGNodeStyleSetWidth(root, 100);
+  BNDYGNodeStyleSetHeight(root, 100);
 
-  const YGNodeRef root_child0 = YGNodeNew();
+  const BNDYGNodeRef root_child0 = BNDYGNodeNew();
   //  root_child0->setContext(&constraintList);
   root_child0->setContext(&constraintList);
   root_child0->setMeasureFunc(_measure);
   //  root_child0->setMeasureFunc(_measure);
-  YGNodeInsertChild(root, root_child0, 0);
+  BNDYGNodeInsertChild(root, root_child0, 0);
 
-  YGNodeCalculateLayout(root, YGUndefined, YGUndefined, YGDirectionLTR);
+  BNDYGNodeCalculateLayout(root, BNDYGUndefined, BNDYGUndefined, BNDYGDirectionLTR);
 
   ASSERT_EQ(1, constraintList.length);
 
   ASSERT_FLOAT_EQ(100, constraintList.constraints[0].width);
-  ASSERT_EQ(YGMeasureModeExactly, constraintList.constraints[0].widthMode);
+  ASSERT_EQ(BNDYGMeasureModeExactly, constraintList.constraints[0].widthMode);
 
   free(constraintList.constraints);
-  YGNodeFreeRecursive(root);
+  BNDYGNodeFreeRecursive(root);
 }
 
 TEST(YogaTest, exactly_measure_stretched_child_row) {
@@ -76,26 +76,26 @@ TEST(YogaTest, exactly_measure_stretched_child_row) {
       .constraints = (struct _MeasureConstraint *) malloc(10 * sizeof(struct _MeasureConstraint)),
   };
 
-  const YGNodeRef root = YGNodeNew();
-  YGNodeStyleSetFlexDirection(root, YGFlexDirectionRow);
-  YGNodeStyleSetWidth(root, 100);
-  YGNodeStyleSetHeight(root, 100);
+  const BNDYGNodeRef root = BNDYGNodeNew();
+  BNDYGNodeStyleSetFlexDirection(root, BNDYGFlexDirectionRow);
+  BNDYGNodeStyleSetWidth(root, 100);
+  BNDYGNodeStyleSetHeight(root, 100);
 
-  const YGNodeRef root_child0 = YGNodeNew();
+  const BNDYGNodeRef root_child0 = BNDYGNodeNew();
   //  root_child0->setContext(&constraintList);
   root_child0->setContext(&constraintList);
   root_child0->setMeasureFunc(_measure);
-  YGNodeInsertChild(root, root_child0, 0);
+  BNDYGNodeInsertChild(root, root_child0, 0);
 
-  YGNodeCalculateLayout(root, YGUndefined, YGUndefined, YGDirectionLTR);
+  BNDYGNodeCalculateLayout(root, BNDYGUndefined, BNDYGUndefined, BNDYGDirectionLTR);
 
   ASSERT_EQ(1, constraintList.length);
 
   ASSERT_FLOAT_EQ(100, constraintList.constraints[0].height);
-  ASSERT_EQ(YGMeasureModeExactly, constraintList.constraints[0].heightMode);
+  ASSERT_EQ(BNDYGMeasureModeExactly, constraintList.constraints[0].heightMode);
 
   free(constraintList.constraints);
-  YGNodeFreeRecursive(root);
+  BNDYGNodeFreeRecursive(root);
 }
 
 TEST(YogaTest, at_most_main_axis_column) {
@@ -104,24 +104,24 @@ TEST(YogaTest, at_most_main_axis_column) {
       .constraints = (struct _MeasureConstraint *) malloc(10 * sizeof(struct _MeasureConstraint)),
   };
 
-  const YGNodeRef root = YGNodeNew();
-  YGNodeStyleSetWidth(root, 100);
-  YGNodeStyleSetHeight(root, 100);
+  const BNDYGNodeRef root = BNDYGNodeNew();
+  BNDYGNodeStyleSetWidth(root, 100);
+  BNDYGNodeStyleSetHeight(root, 100);
 
-  const YGNodeRef root_child0 = YGNodeNew();
+  const BNDYGNodeRef root_child0 = BNDYGNodeNew();
   root_child0->setContext(&constraintList);
   root_child0->setMeasureFunc(_measure);
-  YGNodeInsertChild(root, root_child0, 0);
+  BNDYGNodeInsertChild(root, root_child0, 0);
 
-  YGNodeCalculateLayout(root, YGUndefined, YGUndefined, YGDirectionLTR);
+  BNDYGNodeCalculateLayout(root, BNDYGUndefined, BNDYGUndefined, BNDYGDirectionLTR);
 
   ASSERT_EQ(1, constraintList.length);
 
   ASSERT_FLOAT_EQ(100, constraintList.constraints[0].height);
-  ASSERT_EQ(YGMeasureModeAtMost, constraintList.constraints[0].heightMode);
+  ASSERT_EQ(BNDYGMeasureModeAtMost, constraintList.constraints[0].heightMode);
 
   free(constraintList.constraints);
-  YGNodeFreeRecursive(root);
+  BNDYGNodeFreeRecursive(root);
 }
 
 TEST(YogaTest, at_most_cross_axis_column) {
@@ -130,25 +130,25 @@ TEST(YogaTest, at_most_cross_axis_column) {
       .constraints = (struct _MeasureConstraint *) malloc(10 * sizeof(struct _MeasureConstraint)),
   };
 
-  const YGNodeRef root = YGNodeNew();
-  YGNodeStyleSetAlignItems(root, YGAlignFlexStart);
-  YGNodeStyleSetWidth(root, 100);
-  YGNodeStyleSetHeight(root, 100);
+  const BNDYGNodeRef root = BNDYGNodeNew();
+  BNDYGNodeStyleSetAlignItems(root, BNDYGAlignFlexStart);
+  BNDYGNodeStyleSetWidth(root, 100);
+  BNDYGNodeStyleSetHeight(root, 100);
 
-  const YGNodeRef root_child0 = YGNodeNew();
+  const BNDYGNodeRef root_child0 = BNDYGNodeNew();
   root_child0->setContext(&constraintList);
   root_child0->setMeasureFunc(_measure);
-  YGNodeInsertChild(root, root_child0, 0);
+  BNDYGNodeInsertChild(root, root_child0, 0);
 
-  YGNodeCalculateLayout(root, YGUndefined, YGUndefined, YGDirectionLTR);
+  BNDYGNodeCalculateLayout(root, BNDYGUndefined, BNDYGUndefined, BNDYGDirectionLTR);
 
   ASSERT_EQ(1, constraintList.length);
 
   ASSERT_FLOAT_EQ(100, constraintList.constraints[0].width);
-  ASSERT_EQ(YGMeasureModeAtMost, constraintList.constraints[0].widthMode);
+  ASSERT_EQ(BNDYGMeasureModeAtMost, constraintList.constraints[0].widthMode);
 
   free(constraintList.constraints);
-  YGNodeFreeRecursive(root);
+  BNDYGNodeFreeRecursive(root);
 }
 
 TEST(YogaTest, at_most_main_axis_row) {
@@ -157,25 +157,25 @@ TEST(YogaTest, at_most_main_axis_row) {
       .constraints = (struct _MeasureConstraint *) malloc(10 * sizeof(struct _MeasureConstraint)),
   };
 
-  const YGNodeRef root = YGNodeNew();
-  YGNodeStyleSetFlexDirection(root, YGFlexDirectionRow);
-  YGNodeStyleSetWidth(root, 100);
-  YGNodeStyleSetHeight(root, 100);
+  const BNDYGNodeRef root = BNDYGNodeNew();
+  BNDYGNodeStyleSetFlexDirection(root, BNDYGFlexDirectionRow);
+  BNDYGNodeStyleSetWidth(root, 100);
+  BNDYGNodeStyleSetHeight(root, 100);
 
-  const YGNodeRef root_child0 = YGNodeNew();
+  const BNDYGNodeRef root_child0 = BNDYGNodeNew();
   root_child0->setContext(&constraintList);
   root_child0->setMeasureFunc(_measure);
-  YGNodeInsertChild(root, root_child0, 0);
+  BNDYGNodeInsertChild(root, root_child0, 0);
 
-  YGNodeCalculateLayout(root, YGUndefined, YGUndefined, YGDirectionLTR);
+  BNDYGNodeCalculateLayout(root, BNDYGUndefined, BNDYGUndefined, BNDYGDirectionLTR);
 
   ASSERT_EQ(1, constraintList.length);
 
   ASSERT_FLOAT_EQ(100, constraintList.constraints[0].width);
-  ASSERT_EQ(YGMeasureModeAtMost, constraintList.constraints[0].widthMode);
+  ASSERT_EQ(BNDYGMeasureModeAtMost, constraintList.constraints[0].widthMode);
 
   free(constraintList.constraints);
-  YGNodeFreeRecursive(root);
+  BNDYGNodeFreeRecursive(root);
 }
 
 TEST(YogaTest, at_most_cross_axis_row) {
@@ -184,26 +184,26 @@ TEST(YogaTest, at_most_cross_axis_row) {
       .constraints = (struct _MeasureConstraint *) malloc(10 * sizeof(struct _MeasureConstraint)),
   };
 
-  const YGNodeRef root = YGNodeNew();
-  YGNodeStyleSetFlexDirection(root, YGFlexDirectionRow);
-  YGNodeStyleSetAlignItems(root, YGAlignFlexStart);
-  YGNodeStyleSetWidth(root, 100);
-  YGNodeStyleSetHeight(root, 100);
+  const BNDYGNodeRef root = BNDYGNodeNew();
+  BNDYGNodeStyleSetFlexDirection(root, BNDYGFlexDirectionRow);
+  BNDYGNodeStyleSetAlignItems(root, BNDYGAlignFlexStart);
+  BNDYGNodeStyleSetWidth(root, 100);
+  BNDYGNodeStyleSetHeight(root, 100);
 
-  const YGNodeRef root_child0 = YGNodeNew();
+  const BNDYGNodeRef root_child0 = BNDYGNodeNew();
   root_child0->setContext(&constraintList);
   root_child0->setMeasureFunc(_measure);
-  YGNodeInsertChild(root, root_child0, 0);
+  BNDYGNodeInsertChild(root, root_child0, 0);
 
-  YGNodeCalculateLayout(root, YGUndefined, YGUndefined, YGDirectionLTR);
+  BNDYGNodeCalculateLayout(root, BNDYGUndefined, BNDYGUndefined, BNDYGDirectionLTR);
 
   ASSERT_EQ(1, constraintList.length);
 
   ASSERT_FLOAT_EQ(100, constraintList.constraints[0].height);
-  ASSERT_EQ(YGMeasureModeAtMost, constraintList.constraints[0].heightMode);
+  ASSERT_EQ(BNDYGMeasureModeAtMost, constraintList.constraints[0].heightMode);
 
   free(constraintList.constraints);
-  YGNodeFreeRecursive(root);
+  BNDYGNodeFreeRecursive(root);
 }
 
 TEST(YogaTest, flex_child) {
@@ -212,27 +212,27 @@ TEST(YogaTest, flex_child) {
       .constraints = (struct _MeasureConstraint *) malloc(10 * sizeof(struct _MeasureConstraint)),
   };
 
-  const YGNodeRef root = YGNodeNew();
-  YGNodeStyleSetHeight(root, 100);
+  const BNDYGNodeRef root = BNDYGNodeNew();
+  BNDYGNodeStyleSetHeight(root, 100);
 
-  const YGNodeRef root_child0 = YGNodeNew();
-  YGNodeStyleSetFlexGrow(root_child0, 1);
+  const BNDYGNodeRef root_child0 = BNDYGNodeNew();
+  BNDYGNodeStyleSetFlexGrow(root_child0, 1);
   root_child0->setContext(&constraintList);
   root_child0->setMeasureFunc(_measure);
-  YGNodeInsertChild(root, root_child0, 0);
+  BNDYGNodeInsertChild(root, root_child0, 0);
 
-  YGNodeCalculateLayout(root, YGUndefined, YGUndefined, YGDirectionLTR);
+  BNDYGNodeCalculateLayout(root, BNDYGUndefined, BNDYGUndefined, BNDYGDirectionLTR);
 
   ASSERT_EQ(2, constraintList.length);
 
   ASSERT_FLOAT_EQ(100, constraintList.constraints[0].height);
-  ASSERT_EQ(YGMeasureModeAtMost, constraintList.constraints[0].heightMode);
+  ASSERT_EQ(BNDYGMeasureModeAtMost, constraintList.constraints[0].heightMode);
 
   ASSERT_FLOAT_EQ(100, constraintList.constraints[1].height);
-  ASSERT_EQ(YGMeasureModeExactly, constraintList.constraints[1].heightMode);
+  ASSERT_EQ(BNDYGMeasureModeExactly, constraintList.constraints[1].heightMode);
 
   free(constraintList.constraints);
-  YGNodeFreeRecursive(root);
+  BNDYGNodeFreeRecursive(root);
 }
 
 TEST(YogaTest, flex_child_with_flex_basis) {
@@ -241,25 +241,25 @@ TEST(YogaTest, flex_child_with_flex_basis) {
       .constraints = (struct _MeasureConstraint *) malloc(10 * sizeof(struct _MeasureConstraint)),
   };
 
-  const YGNodeRef root = YGNodeNew();
-  YGNodeStyleSetHeight(root, 100);
+  const BNDYGNodeRef root = BNDYGNodeNew();
+  BNDYGNodeStyleSetHeight(root, 100);
 
-  const YGNodeRef root_child0 = YGNodeNew();
-  YGNodeStyleSetFlexGrow(root_child0, 1);
-  YGNodeStyleSetFlexBasis(root_child0, 0);
+  const BNDYGNodeRef root_child0 = BNDYGNodeNew();
+  BNDYGNodeStyleSetFlexGrow(root_child0, 1);
+  BNDYGNodeStyleSetFlexBasis(root_child0, 0);
   root_child0->setContext(&constraintList);
   root_child0->setMeasureFunc(_measure);
-  YGNodeInsertChild(root, root_child0, 0);
+  BNDYGNodeInsertChild(root, root_child0, 0);
 
-  YGNodeCalculateLayout(root, YGUndefined, YGUndefined, YGDirectionLTR);
+  BNDYGNodeCalculateLayout(root, BNDYGUndefined, BNDYGUndefined, BNDYGDirectionLTR);
 
   ASSERT_EQ(1, constraintList.length);
 
   ASSERT_FLOAT_EQ(100, constraintList.constraints[0].height);
-  ASSERT_EQ(YGMeasureModeExactly, constraintList.constraints[0].heightMode);
+  ASSERT_EQ(BNDYGMeasureModeExactly, constraintList.constraints[0].heightMode);
 
   free(constraintList.constraints);
-  YGNodeFreeRecursive(root);
+  BNDYGNodeFreeRecursive(root);
 }
 
 TEST(YogaTest, overflow_scroll_column) {
@@ -268,29 +268,29 @@ TEST(YogaTest, overflow_scroll_column) {
       .constraints = (struct _MeasureConstraint *) malloc(10 * sizeof(struct _MeasureConstraint)),
   };
 
-  const YGNodeRef root = YGNodeNew();
-  YGNodeStyleSetAlignItems(root, YGAlignFlexStart);
-  YGNodeStyleSetOverflow(root, YGOverflowScroll);
-  YGNodeStyleSetHeight(root, 100);
-  YGNodeStyleSetWidth(root, 100);
+  const BNDYGNodeRef root = BNDYGNodeNew();
+  BNDYGNodeStyleSetAlignItems(root, BNDYGAlignFlexStart);
+  BNDYGNodeStyleSetOverflow(root, BNDYGOverflowScroll);
+  BNDYGNodeStyleSetHeight(root, 100);
+  BNDYGNodeStyleSetWidth(root, 100);
 
-  const YGNodeRef root_child0 = YGNodeNew();
+  const BNDYGNodeRef root_child0 = BNDYGNodeNew();
   root_child0->setContext(&constraintList);
   root_child0->setMeasureFunc(_measure);
-  YGNodeInsertChild(root, root_child0, 0);
+  BNDYGNodeInsertChild(root, root_child0, 0);
 
-  YGNodeCalculateLayout(root, YGUndefined, YGUndefined, YGDirectionLTR);
+  BNDYGNodeCalculateLayout(root, BNDYGUndefined, BNDYGUndefined, BNDYGDirectionLTR);
 
   ASSERT_EQ(1, constraintList.length);
 
   ASSERT_FLOAT_EQ(100, constraintList.constraints[0].width);
-  ASSERT_EQ(YGMeasureModeAtMost, constraintList.constraints[0].widthMode);
+  ASSERT_EQ(BNDYGMeasureModeAtMost, constraintList.constraints[0].widthMode);
 
-  ASSERT_TRUE(YGFloatIsUndefined(constraintList.constraints[0].height));
-  ASSERT_EQ(YGMeasureModeUndefined, constraintList.constraints[0].heightMode);
+  ASSERT_TRUE(BNDYGFloatIsUndefined(constraintList.constraints[0].height));
+  ASSERT_EQ(BNDYGMeasureModeUndefined, constraintList.constraints[0].heightMode);
 
   free(constraintList.constraints);
-  YGNodeFreeRecursive(root);
+  BNDYGNodeFreeRecursive(root);
 }
 
 TEST(YogaTest, overflow_scroll_row) {
@@ -299,28 +299,28 @@ TEST(YogaTest, overflow_scroll_row) {
       .constraints = (struct _MeasureConstraint *) malloc(10 * sizeof(struct _MeasureConstraint)),
   };
 
-  const YGNodeRef root = YGNodeNew();
-  YGNodeStyleSetAlignItems(root, YGAlignFlexStart);
-  YGNodeStyleSetFlexDirection(root, YGFlexDirectionRow);
-  YGNodeStyleSetOverflow(root, YGOverflowScroll);
-  YGNodeStyleSetHeight(root, 100);
-  YGNodeStyleSetWidth(root, 100);
+  const BNDYGNodeRef root = BNDYGNodeNew();
+  BNDYGNodeStyleSetAlignItems(root, BNDYGAlignFlexStart);
+  BNDYGNodeStyleSetFlexDirection(root, BNDYGFlexDirectionRow);
+  BNDYGNodeStyleSetOverflow(root, BNDYGOverflowScroll);
+  BNDYGNodeStyleSetHeight(root, 100);
+  BNDYGNodeStyleSetWidth(root, 100);
 
-  const YGNodeRef root_child0 = YGNodeNew();
+  const BNDYGNodeRef root_child0 = BNDYGNodeNew();
   root_child0->setContext(&constraintList);
   root_child0->setMeasureFunc(_measure);
-  YGNodeInsertChild(root, root_child0, 0);
+  BNDYGNodeInsertChild(root, root_child0, 0);
 
-  YGNodeCalculateLayout(root, YGUndefined, YGUndefined, YGDirectionLTR);
+  BNDYGNodeCalculateLayout(root, BNDYGUndefined, BNDYGUndefined, BNDYGDirectionLTR);
 
   ASSERT_EQ(1, constraintList.length);
 
-  ASSERT_TRUE(YGFloatIsUndefined(constraintList.constraints[0].width));
-  ASSERT_EQ(YGMeasureModeUndefined, constraintList.constraints[0].widthMode);
+  ASSERT_TRUE(BNDYGFloatIsUndefined(constraintList.constraints[0].width));
+  ASSERT_EQ(BNDYGMeasureModeUndefined, constraintList.constraints[0].widthMode);
 
   ASSERT_FLOAT_EQ(100, constraintList.constraints[0].height);
-  ASSERT_EQ(YGMeasureModeAtMost, constraintList.constraints[0].heightMode);
+  ASSERT_EQ(BNDYGMeasureModeAtMost, constraintList.constraints[0].heightMode);
 
   free(constraintList.constraints);
-  YGNodeFreeRecursive(root);
+  BNDYGNodeFreeRecursive(root);
 }

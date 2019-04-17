@@ -6,48 +6,48 @@
  */
 
 #include <gtest/gtest.h>
-#include <yoga/Yoga.h>
+#include <bindyoga/BindYoga.h>
 
 // This test isn't correct from the Flexbox standard standpoint,
 // because percentages are calculated with parent constraints.
 // However, we need to make sure we fail gracefully in this case, not returning NaN
 TEST(YogaTest, percent_absolute_position_infinite_height) {
-  const YGConfigRef config = YGConfigNew();
+  const BNDYGConfigRef config = BNDYGConfigNew();
 
-  const YGNodeRef root = YGNodeNewWithConfig(config);
-  YGNodeStyleSetFlexDirection(root, YGFlexDirectionRow);
-  YGNodeStyleSetWidth(root, 300);
+  const BNDYGNodeRef root = BNDYGNodeNewWithConfig(config);
+  BNDYGNodeStyleSetFlexDirection(root, BNDYGFlexDirectionRow);
+  BNDYGNodeStyleSetWidth(root, 300);
 
-  const YGNodeRef root_child0 = YGNodeNewWithConfig(config);
-  YGNodeStyleSetWidth(root_child0, 300);
-  YGNodeStyleSetHeight(root_child0, 300);
-  YGNodeInsertChild(root, root_child0, 0);
+  const BNDYGNodeRef root_child0 = BNDYGNodeNewWithConfig(config);
+  BNDYGNodeStyleSetWidth(root_child0, 300);
+  BNDYGNodeStyleSetHeight(root_child0, 300);
+  BNDYGNodeInsertChild(root, root_child0, 0);
 
-  const YGNodeRef root_child1 = YGNodeNewWithConfig(config);
-  YGNodeStyleSetPositionType(root_child1, YGPositionTypeAbsolute);
-  YGNodeStyleSetPositionPercent(root_child1, YGEdgeLeft, 20);
-  YGNodeStyleSetPositionPercent(root_child1, YGEdgeTop, 20);
-  YGNodeStyleSetWidthPercent(root_child1, 20);
-  YGNodeStyleSetHeightPercent(root_child1, 20);
-  YGNodeInsertChild(root, root_child1, 1);
-  YGNodeCalculateLayout(root, YGUndefined, YGUndefined, YGDirectionLTR);
+  const BNDYGNodeRef root_child1 = BNDYGNodeNewWithConfig(config);
+  BNDYGNodeStyleSetPositionType(root_child1, BNDYGPositionTypeAbsolute);
+  BNDYGNodeStyleSetPositionPercent(root_child1, BNDYGEdgeLeft, 20);
+  BNDYGNodeStyleSetPositionPercent(root_child1, BNDYGEdgeTop, 20);
+  BNDYGNodeStyleSetWidthPercent(root_child1, 20);
+  BNDYGNodeStyleSetHeightPercent(root_child1, 20);
+  BNDYGNodeInsertChild(root, root_child1, 1);
+  BNDYGNodeCalculateLayout(root, BNDYGUndefined, BNDYGUndefined, BNDYGDirectionLTR);
 
-  ASSERT_FLOAT_EQ(0, YGNodeLayoutGetLeft(root));
-  ASSERT_FLOAT_EQ(0, YGNodeLayoutGetTop(root));
-  ASSERT_FLOAT_EQ(300, YGNodeLayoutGetWidth(root));
-  ASSERT_FLOAT_EQ(300, YGNodeLayoutGetHeight(root));
+  ASSERT_FLOAT_EQ(0, BNDYGNodeLayoutGetLeft(root));
+  ASSERT_FLOAT_EQ(0, BNDYGNodeLayoutGetTop(root));
+  ASSERT_FLOAT_EQ(300, BNDYGNodeLayoutGetWidth(root));
+  ASSERT_FLOAT_EQ(300, BNDYGNodeLayoutGetHeight(root));
 
-  ASSERT_FLOAT_EQ(0, YGNodeLayoutGetLeft(root_child0));
-  ASSERT_FLOAT_EQ(0, YGNodeLayoutGetTop(root_child0));
-  ASSERT_FLOAT_EQ(300, YGNodeLayoutGetWidth(root_child0));
-  ASSERT_FLOAT_EQ(300, YGNodeLayoutGetHeight(root_child0));
+  ASSERT_FLOAT_EQ(0, BNDYGNodeLayoutGetLeft(root_child0));
+  ASSERT_FLOAT_EQ(0, BNDYGNodeLayoutGetTop(root_child0));
+  ASSERT_FLOAT_EQ(300, BNDYGNodeLayoutGetWidth(root_child0));
+  ASSERT_FLOAT_EQ(300, BNDYGNodeLayoutGetHeight(root_child0));
 
-  ASSERT_FLOAT_EQ(60, YGNodeLayoutGetLeft(root_child1));
-  ASSERT_FLOAT_EQ(0, YGNodeLayoutGetTop(root_child1));
-  ASSERT_FLOAT_EQ(60, YGNodeLayoutGetWidth(root_child1));
-  ASSERT_FLOAT_EQ(0, YGNodeLayoutGetHeight(root_child1));
+  ASSERT_FLOAT_EQ(60, BNDYGNodeLayoutGetLeft(root_child1));
+  ASSERT_FLOAT_EQ(0, BNDYGNodeLayoutGetTop(root_child1));
+  ASSERT_FLOAT_EQ(60, BNDYGNodeLayoutGetWidth(root_child1));
+  ASSERT_FLOAT_EQ(0, BNDYGNodeLayoutGetHeight(root_child1));
 
-  YGNodeFreeRecursive(root);
+  BNDYGNodeFreeRecursive(root);
 
-  YGConfigFree(config);
+  BNDYGConfigFree(config);
 }

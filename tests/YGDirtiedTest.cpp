@@ -6,20 +6,20 @@
  */
 
 #include <gtest/gtest.h>
-#include <yoga/YGNode.h>
+#include <bindyoga/BindYoga.h>
 
-static void _dirtied(YGNodeRef node) {
+static void _dirtied(BNDYGNodeRef node) {
   int* dirtiedCount = (int*)node->getContext();
   (*dirtiedCount)++;
 }
 
 TEST(YogaTest, dirtied) {
-  const YGNodeRef root = YGNodeNew();
-  YGNodeStyleSetAlignItems(root, YGAlignFlexStart);
-  YGNodeStyleSetWidth(root, 100);
-  YGNodeStyleSetHeight(root, 100);
+  const BNDYGNodeRef root = BNDYGNodeNew();
+  BNDYGNodeStyleSetAlignItems(root, BNDYGAlignFlexStart);
+  BNDYGNodeStyleSetWidth(root, 100);
+  BNDYGNodeStyleSetHeight(root, 100);
 
-  YGNodeCalculateLayout(root, YGUndefined, YGUndefined, YGDirectionLTR);
+  BNDYGNodeCalculateLayout(root, BNDYGUndefined, BNDYGUndefined, BNDYGDirectionLTR);
 
   int dirtiedCount = 0;
   root->setContext(&dirtiedCount);
@@ -37,22 +37,22 @@ TEST(YogaTest, dirtied) {
 }
 
 TEST(YogaTest, dirtied_propagation) {
-  const YGNodeRef root = YGNodeNew();
-  YGNodeStyleSetAlignItems(root, YGAlignFlexStart);
-  YGNodeStyleSetWidth(root, 100);
-  YGNodeStyleSetHeight(root, 100);
+  const BNDYGNodeRef root = BNDYGNodeNew();
+  BNDYGNodeStyleSetAlignItems(root, BNDYGAlignFlexStart);
+  BNDYGNodeStyleSetWidth(root, 100);
+  BNDYGNodeStyleSetHeight(root, 100);
 
-  const YGNodeRef root_child0 = YGNodeNew();
-  YGNodeStyleSetWidth(root_child0, 50);
-  YGNodeStyleSetHeight(root_child0, 20);
-  YGNodeInsertChild(root, root_child0, 0);
+  const BNDYGNodeRef root_child0 = BNDYGNodeNew();
+  BNDYGNodeStyleSetWidth(root_child0, 50);
+  BNDYGNodeStyleSetHeight(root_child0, 20);
+  BNDYGNodeInsertChild(root, root_child0, 0);
 
-  const YGNodeRef root_child1 = YGNodeNew();
-  YGNodeStyleSetWidth(root_child1, 50);
-  YGNodeStyleSetHeight(root_child1, 20);
-  YGNodeInsertChild(root, root_child1, 1);
+  const BNDYGNodeRef root_child1 = BNDYGNodeNew();
+  BNDYGNodeStyleSetWidth(root_child1, 50);
+  BNDYGNodeStyleSetHeight(root_child1, 20);
+  BNDYGNodeInsertChild(root, root_child1, 1);
 
-  YGNodeCalculateLayout(root, YGUndefined, YGUndefined, YGDirectionLTR);
+  BNDYGNodeCalculateLayout(root, BNDYGUndefined, BNDYGUndefined, BNDYGDirectionLTR);
 
   int dirtiedCount = 0;
   root->setContext(&dirtiedCount);
@@ -70,22 +70,22 @@ TEST(YogaTest, dirtied_propagation) {
 }
 
 TEST(YogaTest, dirtied_hierarchy) {
-  const YGNodeRef root = YGNodeNew();
-  YGNodeStyleSetAlignItems(root, YGAlignFlexStart);
-  YGNodeStyleSetWidth(root, 100);
-  YGNodeStyleSetHeight(root, 100);
+  const BNDYGNodeRef root = BNDYGNodeNew();
+  BNDYGNodeStyleSetAlignItems(root, BNDYGAlignFlexStart);
+  BNDYGNodeStyleSetWidth(root, 100);
+  BNDYGNodeStyleSetHeight(root, 100);
 
-  const YGNodeRef root_child0 = YGNodeNew();
-  YGNodeStyleSetWidth(root_child0, 50);
-  YGNodeStyleSetHeight(root_child0, 20);
-  YGNodeInsertChild(root, root_child0, 0);
+  const BNDYGNodeRef root_child0 = BNDYGNodeNew();
+  BNDYGNodeStyleSetWidth(root_child0, 50);
+  BNDYGNodeStyleSetHeight(root_child0, 20);
+  BNDYGNodeInsertChild(root, root_child0, 0);
 
-  const YGNodeRef root_child1 = YGNodeNew();
-  YGNodeStyleSetWidth(root_child1, 50);
-  YGNodeStyleSetHeight(root_child1, 20);
-  YGNodeInsertChild(root, root_child1, 1);
+  const BNDYGNodeRef root_child1 = BNDYGNodeNew();
+  BNDYGNodeStyleSetWidth(root_child1, 50);
+  BNDYGNodeStyleSetHeight(root_child1, 20);
+  BNDYGNodeInsertChild(root, root_child1, 1);
 
-  YGNodeCalculateLayout(root, YGUndefined, YGUndefined, YGDirectionLTR);
+  BNDYGNodeCalculateLayout(root, BNDYGUndefined, BNDYGUndefined, BNDYGDirectionLTR);
 
   int dirtiedCount = 0;
   root_child0->setContext(&dirtiedCount);

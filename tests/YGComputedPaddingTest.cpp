@@ -6,23 +6,23 @@
  */
 
 #include <gtest/gtest.h>
-#include <yoga/Yoga.h>
+#include <bindyoga/BindYoga.h>
 
 TEST(YogaTest, computed_layout_padding) {
-  const YGNodeRef root = YGNodeNew();
-  YGNodeStyleSetWidth(root, 100);
-  YGNodeStyleSetHeight(root, 100);
-  YGNodeStyleSetPaddingPercent(root, YGEdgeStart, 10);
+  const BNDYGNodeRef root = BNDYGNodeNew();
+  BNDYGNodeStyleSetWidth(root, 100);
+  BNDYGNodeStyleSetHeight(root, 100);
+  BNDYGNodeStyleSetPaddingPercent(root, BNDYGEdgeStart, 10);
 
-  YGNodeCalculateLayout(root, 100, 100, YGDirectionLTR);
+  BNDYGNodeCalculateLayout(root, 100, 100, BNDYGDirectionLTR);
 
-  ASSERT_FLOAT_EQ(10, YGNodeLayoutGetPadding(root, YGEdgeLeft));
-  ASSERT_FLOAT_EQ(0, YGNodeLayoutGetPadding(root, YGEdgeRight));
+  ASSERT_FLOAT_EQ(10, BNDYGNodeLayoutGetPadding(root, BNDYGEdgeLeft));
+  ASSERT_FLOAT_EQ(0, BNDYGNodeLayoutGetPadding(root, BNDYGEdgeRight));
 
-  YGNodeCalculateLayout(root, 100, 100, YGDirectionRTL);
+  BNDYGNodeCalculateLayout(root, 100, 100, BNDYGDirectionRTL);
 
-  ASSERT_FLOAT_EQ(0, YGNodeLayoutGetPadding(root, YGEdgeLeft));
-  ASSERT_FLOAT_EQ(10, YGNodeLayoutGetPadding(root, YGEdgeRight));
+  ASSERT_FLOAT_EQ(0, BNDYGNodeLayoutGetPadding(root, BNDYGEdgeLeft));
+  ASSERT_FLOAT_EQ(10, BNDYGNodeLayoutGetPadding(root, BNDYGEdgeRight));
 
-  YGNodeFreeRecursive(root);
+  BNDYGNodeFreeRecursive(root);
 }

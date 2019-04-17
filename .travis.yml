@@ -61,7 +61,7 @@ deploy:
   fqdn: yogalayout.com
   local-dir: website/public
   email: yogabot@fb.com
-  name: Yoga-bot
+  name: BindYoga-bot
   keep-history: true
   on:
     branch: master

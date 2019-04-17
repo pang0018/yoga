@@ -6,29 +6,29 @@
  */
 
 #include <gtest/gtest.h>
-#include <yoga/Yoga.h>
+#include <bindyoga/BindYoga.h>
 
 TEST(YogaTest, reset_layout_when_child_removed) {
-  const YGNodeRef root = YGNodeNew();
+  const BNDYGNodeRef root = BNDYGNodeNew();
 
-  const YGNodeRef root_child0 = YGNodeNew();
-  YGNodeStyleSetWidth(root_child0, 100);
-  YGNodeStyleSetHeight(root_child0, 100);
-  YGNodeInsertChild(root, root_child0, 0);
+  const BNDYGNodeRef root_child0 = BNDYGNodeNew();
+  BNDYGNodeStyleSetWidth(root_child0, 100);
+  BNDYGNodeStyleSetHeight(root_child0, 100);
+  BNDYGNodeInsertChild(root, root_child0, 0);
 
-  YGNodeCalculateLayout(root, YGUndefined, YGUndefined, YGDirectionLTR);
+  BNDYGNodeCalculateLayout(root, BNDYGUndefined, BNDYGUndefined, BNDYGDirectionLTR);
 
-  ASSERT_EQ(0, YGNodeLayoutGetLeft(root_child0));
-  ASSERT_EQ(0, YGNodeLayoutGetTop(root_child0));
-  ASSERT_EQ(100, YGNodeLayoutGetWidth(root_child0));
-  ASSERT_EQ(100, YGNodeLayoutGetHeight(root_child0));
+  ASSERT_EQ(0, BNDYGNodeLayoutGetLeft(root_child0));
+  ASSERT_EQ(0, BNDYGNodeLayoutGetTop(root_child0));
+  ASSERT_EQ(100, BNDYGNodeLayoutGetWidth(root_child0));
+  ASSERT_EQ(100, BNDYGNodeLayoutGetHeight(root_child0));
 
-  YGNodeRemoveChild(root, root_child0);
+  BNDYGNodeRemoveChild(root, root_child0);
 
-  ASSERT_EQ(0, YGNodeLayoutGetLeft(root_child0));
-  ASSERT_EQ(0, YGNodeLayoutGetTop(root_child0));
-  ASSERT_TRUE(YGFloatIsUndefined(YGNodeLayoutGetWidth(root_child0)));
-  ASSERT_TRUE(YGFloatIsUndefined(YGNodeLayoutGetHeight(root_child0)));
+  ASSERT_EQ(0, BNDYGNodeLayoutGetLeft(root_child0));
+  ASSERT_EQ(0, BNDYGNodeLayoutGetTop(root_child0));
+  ASSERT_TRUE(BNDYGFloatIsUndefined(BNDYGNodeLayoutGetWidth(root_child0)));
+  ASSERT_TRUE(BNDYGFloatIsUndefined(BNDYGNodeLayoutGetHeight(root_child0)));
 
-  YGNodeFreeRecursive(root);
+  BNDYGNodeFreeRecursive(root);
 }

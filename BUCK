@@ -18,13 +18,13 @@ TEST_COMPILER_FLAGS = BASE_COMPILER_FLAGS + GMOCK_OVERRIDE_FLAGS + [
 ]
 
 yoga_cxx_library(
-    name = "yoga",
-    srcs = glob(["yoga/*.cpp"]),
+    name = "bindyoga",
+    srcs = glob(["bindyoga/*.cpp"]),
     header_namespace = "",
-    exported_headers = subdir_glob([("", "yoga/*.h")]),
+    exported_headers = subdir_glob([("", "bindyoga/*.h")]),
     compiler_flags = COMPILER_FLAGS,
     soname = "libyogacore.$(ext)",
-    tests = [":YogaTests"],
+    tests = [":BindYogaTests"],
     visibility = ["PUBLIC"],
     deps = [
         yoga_dep("lib/fb:ndklog"),
@@ -38,7 +38,7 @@ yoga_cxx_test(
     contacts = ["emilsj@fb.com"],
     visibility = ["PUBLIC"],
     deps = [
-        ":yoga",
+        ":bindyoga",
         GTEST_TARGET,
     ],
 )

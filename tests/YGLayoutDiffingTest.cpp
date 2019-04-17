@@ -6,82 +6,82 @@
  */
 
 #include <gtest/gtest.h>
-#include <yoga/YGNode.h>
-#include <yoga/Yoga.h>
+#include <bindyoga/BNDYGNode.h>
+#include <bindyoga/BindYoga.h>
 
 TEST(YogaTest, assert_layout_trees_are_same) {
-  YGConfig* config = YGConfigNew();
-  YGConfigSetUseLegacyStretchBehaviour(config, true);
-  const YGNodeRef root1 = YGNodeNewWithConfig(config);
-  YGNodeStyleSetWidth(root1, 500);
-  YGNodeStyleSetHeight(root1, 500);
+  BNDYGConfig* config = BNDYGConfigNew();
+  BNDYGConfigSetUseLegacyStretchBehaviour(config, true);
+  const BNDYGNodeRef root1 = BNDYGNodeNewWithConfig(config);
+  BNDYGNodeStyleSetWidth(root1, 500);
+  BNDYGNodeStyleSetHeight(root1, 500);
 
-  const YGNodeRef root1_child0 = YGNodeNewWithConfig(config);
-  YGNodeStyleSetAlignItems(root1_child0, YGAlignFlexStart);
-  YGNodeInsertChild(root1, root1_child0, 0);
+  const BNDYGNodeRef root1_child0 = BNDYGNodeNewWithConfig(config);
+  BNDYGNodeStyleSetAlignItems(root1_child0, BNDYGAlignFlexStart);
+  BNDYGNodeInsertChild(root1, root1_child0, 0);
 
-  const YGNodeRef root1_child0_child0 = YGNodeNewWithConfig(config);
-  YGNodeStyleSetFlexGrow(root1_child0_child0, 1);
-  YGNodeStyleSetFlexShrink(root1_child0_child0, 1);
-  YGNodeInsertChild(root1_child0, root1_child0_child0, 0);
+  const BNDYGNodeRef root1_child0_child0 = BNDYGNodeNewWithConfig(config);
+  BNDYGNodeStyleSetFlexGrow(root1_child0_child0, 1);
+  BNDYGNodeStyleSetFlexShrink(root1_child0_child0, 1);
+  BNDYGNodeInsertChild(root1_child0, root1_child0_child0, 0);
 
-  const YGNodeRef root1_child0_child0_child0 = YGNodeNewWithConfig(config);
-  YGNodeStyleSetFlexGrow(root1_child0_child0_child0, 1);
-  YGNodeStyleSetFlexShrink(root1_child0_child0_child0, 1);
-  YGNodeInsertChild(root1_child0_child0, root1_child0_child0_child0, 0);
+  const BNDYGNodeRef root1_child0_child0_child0 = BNDYGNodeNewWithConfig(config);
+  BNDYGNodeStyleSetFlexGrow(root1_child0_child0_child0, 1);
+  BNDYGNodeStyleSetFlexShrink(root1_child0_child0_child0, 1);
+  BNDYGNodeInsertChild(root1_child0_child0, root1_child0_child0_child0, 0);
 
-  const int32_t cal1_configInstanceCount = YGConfigGetInstanceCount();
-  const int32_t cal1_nodeInstanceCount = YGNodeGetInstanceCount();
+  const int32_t cal1_configInstanceCount = BNDYGConfigGetInstanceCount();
+  const int32_t cal1_nodeInstanceCount = BNDYGNodeGetInstanceCount();
 
-  YGNodeCalculateLayout(root1, YGUndefined, YGUndefined, YGDirectionLTR);
+  BNDYGNodeCalculateLayout(root1, BNDYGUndefined, BNDYGUndefined, BNDYGDirectionLTR);
 
-  ASSERT_EQ(YGConfigGetInstanceCount(), cal1_configInstanceCount);
-  ASSERT_EQ(YGNodeGetInstanceCount(), cal1_nodeInstanceCount);
+  ASSERT_EQ(BNDYGConfigGetInstanceCount(), cal1_configInstanceCount);
+  ASSERT_EQ(BNDYGNodeGetInstanceCount(), cal1_nodeInstanceCount);
 
-  const YGNodeRef root2 = YGNodeNewWithConfig(config);
-  YGNodeStyleSetWidth(root2, 500);
-  YGNodeStyleSetHeight(root2, 500);
+  const BNDYGNodeRef root2 = BNDYGNodeNewWithConfig(config);
+  BNDYGNodeStyleSetWidth(root2, 500);
+  BNDYGNodeStyleSetHeight(root2, 500);
 
-  const YGNodeRef root2_child0 = YGNodeNewWithConfig(config);
-  YGNodeStyleSetAlignItems(root2_child0, YGAlignFlexStart);
-  YGNodeInsertChild(root2, root2_child0, 0);
+  const BNDYGNodeRef root2_child0 = BNDYGNodeNewWithConfig(config);
+  BNDYGNodeStyleSetAlignItems(root2_child0, BNDYGAlignFlexStart);
+  BNDYGNodeInsertChild(root2, root2_child0, 0);
 
-  const YGNodeRef root2_child0_child0 = YGNodeNewWithConfig(config);
-  YGNodeStyleSetFlexGrow(root2_child0_child0, 1);
-  YGNodeStyleSetFlexShrink(root2_child0_child0, 1);
-  YGNodeInsertChild(root2_child0, root2_child0_child0, 0);
+  const BNDYGNodeRef root2_child0_child0 = BNDYGNodeNewWithConfig(config);
+  BNDYGNodeStyleSetFlexGrow(root2_child0_child0, 1);
+  BNDYGNodeStyleSetFlexShrink(root2_child0_child0, 1);
+  BNDYGNodeInsertChild(root2_child0, root2_child0_child0, 0);
 
-  const YGNodeRef root2_child0_child0_child0 = YGNodeNewWithConfig(config);
-  YGNodeStyleSetFlexGrow(root2_child0_child0_child0, 1);
-  YGNodeStyleSetFlexShrink(root2_child0_child0_child0, 1);
-  YGNodeInsertChild(root2_child0_child0, root2_child0_child0_child0, 0);
+  const BNDYGNodeRef root2_child0_child0_child0 = BNDYGNodeNewWithConfig(config);
+  BNDYGNodeStyleSetFlexGrow(root2_child0_child0_child0, 1);
+  BNDYGNodeStyleSetFlexShrink(root2_child0_child0_child0, 1);
+  BNDYGNodeInsertChild(root2_child0_child0, root2_child0_child0_child0, 0);
 
-  const int32_t cal2_configInstanceCount = YGConfigGetInstanceCount();
-  const int32_t cal2_nodeInstanceCount = YGNodeGetInstanceCount();
+  const int32_t cal2_configInstanceCount = BNDYGConfigGetInstanceCount();
+  const int32_t cal2_nodeInstanceCount = BNDYGNodeGetInstanceCount();
 
-  YGNodeCalculateLayout(root2, YGUndefined, YGUndefined, YGDirectionLTR);
+  BNDYGNodeCalculateLayout(root2, BNDYGUndefined, BNDYGUndefined, BNDYGDirectionLTR);
 
-  ASSERT_EQ(YGConfigGetInstanceCount(), cal2_configInstanceCount);
-  ASSERT_EQ(YGNodeGetInstanceCount(), cal2_nodeInstanceCount);
+  ASSERT_EQ(BNDYGConfigGetInstanceCount(), cal2_configInstanceCount);
+  ASSERT_EQ(BNDYGNodeGetInstanceCount(), cal2_nodeInstanceCount);
 
-  ASSERT_TRUE(YGNodeLayoutGetDidUseLegacyFlag(root1));
-  ASSERT_TRUE(YGNodeLayoutGetDidUseLegacyFlag(root2));
+  ASSERT_TRUE(BNDYGNodeLayoutGetDidUseLegacyFlag(root1));
+  ASSERT_TRUE(BNDYGNodeLayoutGetDidUseLegacyFlag(root2));
   ASSERT_TRUE(root1->isLayoutTreeEqualToNode(*root2));
 
-  YGNodeStyleSetAlignItems(root2, YGAlignFlexEnd);
+  BNDYGNodeStyleSetAlignItems(root2, BNDYGAlignFlexEnd);
 
-  const int32_t cal3_configInstanceCount = YGConfigGetInstanceCount();
-  const int32_t cal3_nodeInstanceCount = YGNodeGetInstanceCount();
+  const int32_t cal3_configInstanceCount = BNDYGConfigGetInstanceCount();
+  const int32_t cal3_nodeInstanceCount = BNDYGNodeGetInstanceCount();
 
-  YGNodeCalculateLayout(root2, YGUndefined, YGUndefined, YGDirectionLTR);
+  BNDYGNodeCalculateLayout(root2, BNDYGUndefined, BNDYGUndefined, BNDYGDirectionLTR);
 
-  ASSERT_EQ(YGConfigGetInstanceCount(), cal3_configInstanceCount);
-  ASSERT_EQ(YGNodeGetInstanceCount(), cal3_nodeInstanceCount);
+  ASSERT_EQ(BNDYGConfigGetInstanceCount(), cal3_configInstanceCount);
+  ASSERT_EQ(BNDYGNodeGetInstanceCount(), cal3_nodeInstanceCount);
 
   ASSERT_FALSE(root1->isLayoutTreeEqualToNode(*root2));
 
-  YGNodeFreeRecursive(root1);
-  YGNodeFreeRecursive(root2);
+  BNDYGNodeFreeRecursive(root1);
+  BNDYGNodeFreeRecursive(root2);
 
-  YGConfigFree(config);
+  BNDYGConfigFree(config);
 }

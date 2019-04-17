@@ -7,13 +7,13 @@
 
 #include <gtest/gtest.h>
 #include <stdarg.h>
-#include <yoga/Yoga.h>
+#include <bindyoga/BindYoga.h>
 
 namespace {
 char writeBuffer[4096];
-int _unmanagedLogger(const YGConfigRef config,
-                     const YGNodeRef node,
-                     YGLogLevel level,
+int _unmanagedLogger(const BNDYGConfigRef config,
+                     const BNDYGNodeRef node,
+                     BNDYGLogLevel level,
                      const char *format,
                      va_list args) {
   return vsnprintf(writeBuffer + strlen(writeBuffer),
@@ -25,15 +25,15 @@ int _unmanagedLogger(const YGConfigRef config,
 
 TEST(YogaTest, logger_default_node_should_print_no_style_info) {
   writeBuffer[0] = '\0';
-  const YGConfigRef config = YGConfigNew();
-  YGConfigSetLogger(config, _unmanagedLogger);
-  const YGNodeRef root = YGNodeNewWithConfig(config);
-  YGNodeCalculateLayout(root, YGUnitUndefined, YGUnitUndefined, YGDirectionLTR);
-  YGNodePrint(root,
-              (YGPrintOptions)(YGPrintOptionsLayout | YGPrintOptionsChildren |
-                               YGPrintOptionsStyle));
-  YGConfigSetLogger(config, NULL);
-  YGNodeFree(root);
+  const BNDYGConfigRef config = BNDYGConfigNew();
+  BNDYGConfigSetLogger(config, _unmanagedLogger);
+  const BNDYGNodeRef root = BNDYGNodeNewWithConfig(config);
+  BNDYGNodeCalculateLayout(root, BNDYGUnitUndefined, BNDYGUnitUndefined, BNDYGDirectionLTR);
+  BNDYGNodePrint(root,
+              (BNDYGPrintOptions)(BNDYGPrintOptionsLayout | BNDYGPrintOptionsChildren |
+                               BNDYGPrintOptionsStyle));
+  BNDYGConfigSetLogger(config, NULL);
+  BNDYGNodeFree(root);
 
   const char *expected = "<div layout=\"width: 0; height: 0; top: 0; left: 0;\" style=\"\" ></div>";
   ASSERT_STREQ(expected, writeBuffer);
@@ -41,21 +41,21 @@ TEST(YogaTest, logger_default_node_should_print_no_style_info) {
 
 TEST(YogaTest, logger_node_with_percentage_absolute_position_and_margin) {
   writeBuffer[0] = '\0';
-  const YGConfigRef config = YGConfigNew();
-  YGConfigSetLogger(config, _unmanagedLogger);
-  const YGNodeRef root = YGNodeNewWithConfig(config);
-  YGNodeStyleSetPositionType(root, YGPositionTypeAbsolute);
-  YGNodeStyleSetWidthPercent(root, 50);
-  YGNodeStyleSetHeightPercent(root, 75);
-  YGNodeStyleSetFlex(root, 1);
-  YGNodeStyleSetMargin(root, YGEdgeRight, 10);
-  YGNodeStyleSetMarginAuto(root, YGEdgeLeft);
-  YGNodeCalculateLayout(root, YGUnitUndefined, YGUnitUndefined, YGDirectionLTR);
-  YGNodePrint(root,
-              (YGPrintOptions)(YGPrintOptionsLayout | YGPrintOptionsChildren |
-                               YGPrintOptionsStyle));
-  YGConfigSetLogger(config, NULL);
-  YGNodeFree(root);
+  const BNDYGConfigRef config = BNDYGConfigNew();
+  BNDYGConfigSetLogger(config, _unmanagedLogger);
+  const BNDYGNodeRef root = BNDYGNodeNewWithConfig(config);
+  BNDYGNodeStyleSetPositionType(root, BNDYGPositionTypeAbsolute);
+  BNDYGNodeStyleSetWidthPercent(root, 50);
+  BNDYGNodeStyleSetHeightPercent(root, 75);
+  BNDYGNodeStyleSetFlex(root, 1);
+  BNDYGNodeStyleSetMargin(root, BNDYGEdgeRight, 10);
+  BNDYGNodeStyleSetMarginAuto(root, BNDYGEdgeLeft);
+  BNDYGNodeCalculateLayout(root, BNDYGUnitUndefined, BNDYGUnitUndefined, BNDYGDirectionLTR);
+  BNDYGNodePrint(root,
+              (BNDYGPrintOptions)(BNDYGPrintOptionsLayout | BNDYGPrintOptionsChildren |
+                               BNDYGPrintOptionsStyle));
+  BNDYGConfigSetLogger(config, NULL);
+  BNDYGNodeFree(root);
 
   const char *expected = "<div layout=\"width: 0; height: 0; top: 0; left: 0;\" style=\"flex: 1; "
                          "margin-left: auto; margin-right: 10px; width: 50%; height: 75%; "
@@ -65,19 +65,19 @@ TEST(YogaTest, logger_node_with_percentage_absolute_position_and_margin) {
 
 TEST(YogaTest, logger_node_with_children_should_print_indented) {
   writeBuffer[0] = '\0';
-  const YGConfigRef config = YGConfigNew();
-  YGConfigSetLogger(config, _unmanagedLogger);
-  const YGNodeRef root = YGNodeNewWithConfig(config);
-  const YGNodeRef child0 = YGNodeNewWithConfig(config);
-  const YGNodeRef child1 = YGNodeNewWithConfig(config);
-  YGNodeInsertChild(root, child0, 0);
-  YGNodeInsertChild(root, child1, 1);
-  YGNodeCalculateLayout(root, YGUnitUndefined, YGUnitUndefined, YGDirectionLTR);
-  YGNodePrint(root,
-              (YGPrintOptions)(YGPrintOptionsLayout | YGPrintOptionsChildren |
-                               YGPrintOptionsStyle));
-  YGConfigSetLogger(config, NULL);
-  YGNodeFreeRecursive(root);
+  const BNDYGConfigRef config = BNDYGConfigNew();
+  BNDYGConfigSetLogger(config, _unmanagedLogger);
+  const BNDYGNodeRef root = BNDYGNodeNewWithConfig(config);
+  const BNDYGNodeRef child0 = BNDYGNodeNewWithConfig(config);
+  const BNDYGNodeRef child1 = BNDYGNodeNewWithConfig(config);
+  BNDYGNodeInsertChild(root, child0, 0);
+  BNDYGNodeInsertChild(root, child1, 1);
+  BNDYGNodeCalculateLayout(root, BNDYGUnitUndefined, BNDYGUnitUndefined, BNDYGDirectionLTR);
+  BNDYGNodePrint(root,
+              (BNDYGPrintOptions)(BNDYGPrintOptionsLayout | BNDYGPrintOptionsChildren |
+                               BNDYGPrintOptionsStyle));
+  BNDYGConfigSetLogger(config, NULL);
+  BNDYGNodeFreeRecursive(root);
 
   const char *expected = "<div layout=\"width: 0; height: 0; top: 0; left: 0;\" style=\"\" >\n  "
                          "<div layout=\"width: 0; height: 0; top: 0; left: 0;\" style=\"\" "

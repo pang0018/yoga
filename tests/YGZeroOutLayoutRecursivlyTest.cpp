@@ -6,32 +6,34 @@
  */
 
 #include <gtest/gtest.h>
-#include <yoga/Yoga.h>
+
+#include <bindyoga/BNDBNDYGNode.h>
+#include <bindyoga/BindYoga.h>
 
 TEST(YogaTest, zero_out_layout) {
-  const YGNodeRef root = YGNodeNew();
-  YGNodeStyleSetFlexDirection(root, YGFlexDirectionRow);
-  YGNodeStyleSetWidth(root, 200);
-  YGNodeStyleSetHeight(root, 200);
+  const BNDYGNodeRef root = BNDYGNodeNew();
+  BNDYGNodeStyleSetFlexDirection(root, BNDYGFlexDirectionRow);
+  BNDYGNodeStyleSetWidth(root, 200);
+  BNDYGNodeStyleSetHeight(root, 200);
 
-  const YGNodeRef child = YGNodeNew();
-  YGNodeInsertChild(root, child, 0);
-  YGNodeStyleSetWidth(child, 100);
-  YGNodeStyleSetHeight(child, 100);
-  YGNodeStyleSetMargin(child, YGEdgeTop, 10);
-  YGNodeStyleSetPadding(child, YGEdgeTop, 10);
+  const BNDYGNodeRef child = BNDYGNodeNew();
+  BNDYGNodeInsertChild(root, child, 0);
+  BNDYGNodeStyleSetWidth(child, 100);
+  BNDYGNodeStyleSetHeight(child, 100);
+  BNDYGNodeStyleSetMargin(child, BNDYGEdgeTop, 10);
+  BNDYGNodeStyleSetPadding(child, BNDYGEdgeTop, 10);
 
-  YGNodeCalculateLayout(root, 100, 100, YGDirectionLTR);
+  BNDYGNodeCalculateLayout(root, 100, 100, BNDYGDirectionLTR);
 
-  ASSERT_FLOAT_EQ(10, YGNodeLayoutGetMargin(child, YGEdgeTop));
-  ASSERT_FLOAT_EQ(10, YGNodeLayoutGetPadding(child, YGEdgeTop));
+  ASSERT_FLOAT_EQ(10, BNDYGNodeLayoutGetMargin(child, BNDYGEdgeTop));
+  ASSERT_FLOAT_EQ(10, BNDYGNodeLayoutGetPadding(child, BNDYGEdgeTop));
 
-  YGNodeStyleSetDisplay(child, YGDisplayNone);
+  BNDYGNodeStyleSetDisplay(child, BNDYGDisplayNone);
 
-  YGNodeCalculateLayout(root, 100, 100, YGDirectionLTR);
+  BNDYGNodeCalculateLayout(root, 100, 100, BNDYGDirectionLTR);
 
-  ASSERT_FLOAT_EQ(0, YGNodeLayoutGetMargin(child, YGEdgeTop));
-  ASSERT_FLOAT_EQ(0, YGNodeLayoutGetPadding(child, YGEdgeTop));
+  ASSERT_FLOAT_EQ(0, BNDYGNodeLayoutGetMargin(child, BNDYGEdgeTop));
+  ASSERT_FLOAT_EQ(0, BNDYGNodeLayoutGetPadding(child, BNDYGEdgeTop));
 
-  YGNodeFreeRecursive(root);
+  BNDYGNodeFreeRecursive(root);
 }

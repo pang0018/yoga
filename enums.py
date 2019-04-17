@@ -139,37 +139,37 @@ def to_log_lower(symbol):
 root = os.path.dirname(os.path.abspath(__file__))
 
 # write out C & Objective-C headers
-with open(root + '/yoga/YGEnums.h', 'w') as f:
+with open(root + '/bindyogayoga/BNDYGEnums.h', 'w') as f:
     f.write(LICENSE)
     f.write('#pragma once\n\n')
-    f.write('#include "YGMacros.h"\n\n')
-    f.write('YG_EXTERN_C_BEGIN\n\n')
+    f.write('#include "BNDYGMacros.h"\n\n')
+    f.write('BNDYG_EXTERN_C_BEGIN\n\n')
     for name, values in sorted(ENUMS.items()):
-        f.write('#define YG%sCount %s\n' % (name, len(values)))
-        f.write('typedef YG_ENUM_BEGIN(YG%s) {\n' % name)
+        f.write('#define BNDYG%sCount %s\n' % (name, len(values)))
+        f.write('typedef BNDYG_ENUM_BEGIN(YG%s) {\n' % name)
         for value in values:
             if isinstance(value, tuple):
-                f.write('  YG%s%s = %d,\n' % (name, value[0], value[1]))
+                f.write('  BNDYG%s%s = %d,\n' % (name, value[0], value[1]))
             else:
-                f.write('  YG%s%s,\n' % (name, value))
-        f.write('} YG_ENUM_END(YG%s);\n' % name)
-        f.write('WIN_EXPORT const char *YG%sToString(const YG%s value);\n' % (name, name))
+                f.write('  BNDYG%s%s,\n' % (name, value))
+        f.write('} BNDYG_ENUM_END(BNDYG%s);\n' % name)
+        f.write('WIN_EXPORT const char *BNDYG%sToString(const BNDYG%s value);\n' % (name, name))
         f.write('\n')
-    f.write('YG_EXTERN_C_END\n')
+    f.write('BNDYG_EXTERN_C_END\n')
 
 # write out C body for printing
-with open(root + '/yoga/YGEnums.cpp', 'w') as f:
+with open(root + '/bindyoga/BNDYGEnums.cpp', 'w') as f:
     f.write(LICENSE)
-    f.write('#include "YGEnums.h"\n\n')
+    f.write('#include "BNDYGEnums.h"\n\n')
     for name, values in sorted(ENUMS.items()):
-        f.write('const char *YG%sToString(const YG%s value){\n' % (name, name))
+        f.write('const char *BNDYG%sToString(const BNDYG%s value){\n' % (name, name))
         f.write('  switch(value){\n')
         for value in values:
             if isinstance(value, tuple):
-                f.write('    case YG%s%s:\n' % (name, value[0]))
+                f.write('    case BNDYG%s%s:\n' % (name, value[0]))
                 f.write('      return "%s";\n' % to_log_lower(value[0]))
             else:
-                f.write('    case YG%s%s:\n' % (name, value))
+                f.write('    case BNDYG%s%s:\n' % (name, value))
                 f.write('      return "%s";\n' % to_log_lower(value))
         f.write('  }\n')
         f.write('  return "unknown";\n')
@@ -177,12 +177,12 @@ with open(root + '/yoga/YGEnums.cpp', 'w') as f:
 
 # write out java files
 for name, values in sorted(ENUMS.items()):
-    with open(root + '/java/com/facebook/yoga/Yoga%s.java' % name, 'w') as f:
+    with open(root + '/java/com/facebook/bindyoga/BindYoga%s.java' % name, 'w') as f:
         f.write(LICENSE.replace('/**', '/*', 1))
         f.write('package com.facebook.yoga;\n\n')
         f.write('import com.facebook.proguard.annotations.DoNotStrip;\n\n')
         f.write('@DoNotStrip\n')
-        f.write('public enum Yoga%s {\n' % name)
+        f.write('public enum BindYoga%s {\n' % name)
         if len(values) > 0:
             for value in values:
                 if isinstance(value, tuple):
@@ -198,7 +198,7 @@ for name, values in sorted(ENUMS.items()):
         f.write('\n')
         f.write('  private int mIntValue;\n')
         f.write('\n')
-        f.write('  Yoga%s(int intValue) {\n' % name)
+        f.write('  BindYoga%s(int intValue) {\n' % name)
         f.write('    mIntValue = intValue;\n')
         f.write('  }\n')
         f.write('\n')
@@ -206,7 +206,7 @@ for name, values in sorted(ENUMS.items()):
         f.write('    return mIntValue;\n')
         f.write('  }\n')
         f.write('\n')
-        f.write('  public static Yoga%s fromInt(int value) {\n' % name)
+        f.write('  public static BindYoga%s fromInt(int value) {\n' % name)
         f.write('    switch (value) {\n')
         for value in values:
             if isinstance(value, tuple):
@@ -235,7 +235,7 @@ for name, values in sorted(ENUMS.items()):
         f.write('}\n')
 
 # write out javascript file
-with open(root + '/javascript/sources/YGEnums.js', 'w') as f:
+with open(root + '/javascript/sources/BNDYGEnums.js', 'w') as f:
     f.write(LICENSE)
     f.write('module.exports = {\n\n')
     for name, values in sorted(ENUMS.items()):

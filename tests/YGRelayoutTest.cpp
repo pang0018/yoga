@@ -6,45 +6,45 @@
  */
 
 #include <gtest/gtest.h>
-#include <yoga/Yoga.h>
+#include <bindyoga/BindYoga.h>
 
 TEST(YogaTest, dont_cache_computed_flex_basis_between_layouts) {
-  const YGConfigRef config = YGConfigNew();
-  YGConfigSetExperimentalFeatureEnabled(config, YGExperimentalFeatureWebFlexBasis, true);
+  const BNDYGConfigRef config = BNDYGConfigNew();
+  BNDYGConfigSetExperimentalFeatureEnabled(config, BNDYGExperimentalFeatureWebFlexBasis, true);
 
-  const YGNodeRef root = YGNodeNewWithConfig(config);
-  YGNodeStyleSetHeightPercent(root, 100);
-  YGNodeStyleSetWidthPercent(root, 100);
+  const BNDYGNodeRef root = BNDYGNodeNewWithConfig(config);
+  BNDYGNodeStyleSetHeightPercent(root, 100);
+  BNDYGNodeStyleSetWidthPercent(root, 100);
 
-  const YGNodeRef root_child0 = YGNodeNewWithConfig(config);
-  YGNodeStyleSetFlexBasisPercent(root_child0, 100);
-  YGNodeInsertChild(root, root_child0, 0);
+  const BNDYGNodeRef root_child0 = BNDYGNodeNewWithConfig(config);
+  BNDYGNodeStyleSetFlexBasisPercent(root_child0, 100);
+  BNDYGNodeInsertChild(root, root_child0, 0);
 
-  YGNodeCalculateLayout(root, 100, YGUndefined, YGDirectionLTR);
-  YGNodeCalculateLayout(root, 100, 100, YGDirectionLTR);
+  BNDYGNodeCalculateLayout(root, 100, BNDYGUndefined, BNDYGDirectionLTR);
+  BNDYGNodeCalculateLayout(root, 100, 100, BNDYGDirectionLTR);
 
-  ASSERT_FLOAT_EQ(100, YGNodeLayoutGetHeight(root_child0));
+  ASSERT_FLOAT_EQ(100, BNDYGNodeLayoutGetHeight(root_child0));
 
-  YGNodeFreeRecursive(root);
+  BNDYGNodeFreeRecursive(root);
 
-  YGConfigFree(config);
+  BNDYGConfigFree(config);
 }
 
 TEST(YogaTest, recalculate_resolvedDimonsion_onchange) {
-  const YGNodeRef root = YGNodeNew();
+  const BNDYGNodeRef root = BNDYGNodeNew();
 
-  const YGNodeRef root_child0 = YGNodeNew();
-  YGNodeStyleSetMinHeight(root_child0, 10);
-  YGNodeStyleSetMaxHeight(root_child0, 10);
-  YGNodeInsertChild(root, root_child0, 0);
+  const BNDYGNodeRef root_child0 = BNDYGNodeNew();
+  BNDYGNodeStyleSetMinHeight(root_child0, 10);
+  BNDYGNodeStyleSetMaxHeight(root_child0, 10);
+  BNDYGNodeInsertChild(root, root_child0, 0);
 
-  YGNodeCalculateLayout(root, YGUndefined, YGUndefined, YGDirectionLTR);
-  ASSERT_FLOAT_EQ(10, YGNodeLayoutGetHeight(root_child0));
+  BNDYGNodeCalculateLayout(root, BNDYGUndefined, BNDYGUndefined, BNDYGDirectionLTR);
+  ASSERT_FLOAT_EQ(10, BNDYGNodeLayoutGetHeight(root_child0));
 
-  YGNodeStyleSetMinHeight(root_child0, YGUndefined);
-  YGNodeCalculateLayout(root, YGUndefined, YGUndefined, YGDirectionLTR);
+  BNDYGNodeStyleSetMinHeight(root_child0, BNDYGUndefined);
+  BNDYGNodeCalculateLayout(root, BNDYGUndefined, BNDYGUndefined, BNDYGDirectionLTR);
 
-  ASSERT_FLOAT_EQ(0, YGNodeLayoutGetHeight(root_child0));
+  ASSERT_FLOAT_EQ(0, BNDYGNodeLayoutGetHeight(root_child0));
 
-  YGNodeFreeRecursive(root);
+  BNDYGNodeFreeRecursive(root);
 }

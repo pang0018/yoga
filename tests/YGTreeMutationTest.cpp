@@ -6,106 +6,108 @@
  */
 
 #include <gtest/gtest.h>
-#include <yoga/Yoga.h>
 
-static std::vector<YGNodeRef> getChildren(YGNodeRef const node)
+#include <bindyoga/BNDBNDYGNode.h>
+#include <bindyoga/BindYoga.h>
+
+static std::vector<BNDYGNodeRef> getChildren(BNDYGNodeRef const node)
 {
-  const uint32_t count = YGNodeGetChildCount(node);
-  std::vector<YGNodeRef> children;
+  const uint32_t count = BNDYGNodeGetChildCount(node);
+  std::vector<BNDYGNodeRef> children;
   children.reserve(count);
   for (uint32_t i = 0 ; i < count ; i++) {
-    children.push_back(YGNodeGetChild(node, i));
+    children.push_back(BNDYGNodeGetChild(node, i));
   }
   return children;
 }
 
 TEST(YogaTest, set_children_adds_children_to_parent) {
-  YGNodeRef const root = YGNodeNew();
-  YGNodeRef const root_child0 = YGNodeNew();
-  YGNodeRef const root_child1 = YGNodeNew();
+  BNDYGNodeRef const root = BNDYGNodeNew();
+  BNDYGNodeRef const root_child0 = BNDYGNodeNew();
+  BNDYGNodeRef const root_child1 = BNDYGNodeNew();
 
-  YGNodeSetChildren(root, {root_child0, root_child1});
+  BNDYGNodeSetChildren(root, {root_child0, root_child1});
 
-  const std::vector<YGNodeRef> children = getChildren(root);
-  const std::vector<YGNodeRef> expectedChildren = {root_child0, root_child1};
+  const std::vector<BNDYGNodeRef> children = getChildren(root);
+  const std::vector<BNDYGNodeRef> expectedChildren = {root_child0, root_child1};
   ASSERT_EQ(children, expectedChildren);
 
-  const std::vector<YGNodeRef> owners = {YGNodeGetOwner(root_child0), YGNodeGetOwner(root_child1)};
-  const std::vector<YGNodeRef> expectedOwners = {root, root};
+  const std::vector<BNDYGNodeRef> owners = {BNDYGNodeGetOwner(root_child0), BNDYGNodeGetOwner(root_child1)};
+  const std::vector<BNDYGNodeRef> expectedOwners = {root, root};
   ASSERT_EQ(owners, expectedOwners);
 
-  YGNodeFreeRecursive(root);
+  BNDYGNodeFreeRecursive(root);
 }
 
 TEST(YogaTest, set_children_to_empty_removes_old_children) {
-  YGNodeRef const root = YGNodeNew();
-  YGNodeRef const root_child0 = YGNodeNew();
-  YGNodeRef const root_child1 = YGNodeNew();
+  BNDYGNodeRef const root = BNDYGNodeNew();
+  BNDYGNodeRef const root_child0 = BNDYGNodeNew();
+  BNDYGNodeRef const root_child1 = BNDYGNodeNew();
 
-  YGNodeSetChildren(root, {root_child0, root_child1});
-  YGNodeSetChildren(root, {});
+  BNDYGNodeSetChildren(root, {root_child0, root_child1});
+  BNDYGNodeSetChildren(root, {});
 
-  const std::vector<YGNodeRef> children = getChildren(root);
-  const std::vector<YGNodeRef> expectedChildren = {};
+  const std::vector<BNDYGNodeRef> children = getChildren(root);
+  const std::vector<BNDYGNodeRef> expectedChildren = {};
   ASSERT_EQ(children, expectedChildren);
 
-  const std::vector<YGNodeRef> owners = {YGNodeGetOwner(root_child0), YGNodeGetOwner(root_child1)};
-  const std::vector<YGNodeRef> expectedOwners = {nullptr, nullptr};
+  const std::vector<BNDYGNodeRef> owners = {BNDYGNodeGetOwner(root_child0), BNDYGNodeGetOwner(root_child1)};
+  const std::vector<BNDYGNodeRef> expectedOwners = {nullptr, nullptr};
   ASSERT_EQ(owners, expectedOwners);
 
-  YGNodeFreeRecursive(root);
+  BNDYGNodeFreeRecursive(root);
 }
 
 TEST(YogaTest, set_children_replaces_non_common_children) {
-  YGNodeRef const root = YGNodeNew();
-  YGNodeRef const root_child0 = YGNodeNew();
-  YGNodeRef const root_child1 = YGNodeNew();
+  BNDYGNodeRef const root = BNDYGNodeNew();
+  BNDYGNodeRef const root_child0 = BNDYGNodeNew();
+  BNDYGNodeRef const root_child1 = BNDYGNodeNew();
 
-  YGNodeSetChildren(root, {root_child0, root_child1});
+  BNDYGNodeSetChildren(root, {root_child0, root_child1});
 
-  YGNodeRef const root_child2 = YGNodeNew();
-  YGNodeRef const root_child3 = YGNodeNew();
+  BNDYGNodeRef const root_child2 = BNDYGNodeNew();
+  BNDYGNodeRef const root_child3 = BNDYGNodeNew();
 
-  YGNodeSetChildren(root, {root_child2, root_child3});
+  BNDYGNodeSetChildren(root, {root_child2, root_child3});
 
-  const std::vector<YGNodeRef> children = getChildren(root);
-  const std::vector<YGNodeRef> expectedChildren = {root_child2, root_child3};
+  const std::vector<BNDYGNodeRef> children = getChildren(root);
+  const std::vector<BNDYGNodeRef> expectedChildren = {root_child2, root_child3};
   ASSERT_EQ(children, expectedChildren);
 
-  const std::vector<YGNodeRef> owners = {YGNodeGetOwner(root_child0), YGNodeGetOwner(root_child1)};
-  const std::vector<YGNodeRef> expectedOwners = {nullptr, nullptr};
+  const std::vector<BNDYGNodeRef> owners = {BNDYGNodeGetOwner(root_child0), BNDYGNodeGetOwner(root_child1)};
+  const std::vector<BNDYGNodeRef> expectedOwners = {nullptr, nullptr};
   ASSERT_EQ(owners, expectedOwners);
 
-  YGNodeFreeRecursive(root);
-  YGNodeFree(root_child0);
-  YGNodeFree(root_child1);
+  BNDYGNodeFreeRecursive(root);
+  BNDYGNodeFree(root_child0);
+  BNDYGNodeFree(root_child1);
 }
 
 TEST(YogaTest, set_children_keeps_and_reorders_common_children) {
-  YGNodeRef const root = YGNodeNew();
-  YGNodeRef const root_child0 = YGNodeNew();
-  YGNodeRef const root_child1 = YGNodeNew();
-  YGNodeRef const root_child2 = YGNodeNew();
+  BNDYGNodeRef const root = BNDYGNodeNew();
+  BNDYGNodeRef const root_child0 = BNDYGNodeNew();
+  BNDYGNodeRef const root_child1 = BNDYGNodeNew();
+  BNDYGNodeRef const root_child2 = BNDYGNodeNew();
 
-  YGNodeSetChildren(root, {root_child0, root_child1, root_child2});
+  BNDYGNodeSetChildren(root, {root_child0, root_child1, root_child2});
 
-  YGNodeRef const root_child3 = YGNodeNew();
+  BNDYGNodeRef const root_child3 = BNDYGNodeNew();
 
-  YGNodeSetChildren(root, {root_child2, root_child1, root_child3});
+  BNDYGNodeSetChildren(root, {root_child2, root_child1, root_child3});
 
-  const std::vector<YGNodeRef> children = getChildren(root);
-  const std::vector<YGNodeRef> expectedChildren = {root_child2, root_child1, root_child3};
+  const std::vector<BNDYGNodeRef> children = getChildren(root);
+  const std::vector<BNDYGNodeRef> expectedChildren = {root_child2, root_child1, root_child3};
   ASSERT_EQ(children, expectedChildren);
 
-  const std::vector<YGNodeRef> owners = {
-    YGNodeGetOwner(root_child0),
-    YGNodeGetOwner(root_child1),
-    YGNodeGetOwner(root_child2),
-    YGNodeGetOwner(root_child3)
+  const std::vector<BNDYGNodeRef> owners = {
+    BNDYGNodeGetOwner(root_child0),
+    BNDYGNodeGetOwner(root_child1),
+    BNDYGNodeGetOwner(root_child2),
+    BNDYGNodeGetOwner(root_child3)
   };
-  const std::vector<YGNodeRef> expectedOwners = {nullptr, root, root, root};
+  const std::vector<BNDYGNodeRef> expectedOwners = {nullptr, root, root, root};
   ASSERT_EQ(owners, expectedOwners);
 
-  YGNodeFreeRecursive(root);
-  YGNodeFree(root_child0);
+  BNDYGNodeFreeRecursive(root);
+  BNDYGNodeFree(root_child0);
 }

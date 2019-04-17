@@ -6,77 +6,79 @@
  */
 
 #include <gtest/gtest.h>
-#include <yoga/YGNode.h>
+
+#include <bindyoga/BNDYGNode.h>
+#include <bindyoga/BindYoga.h>
 #include <iostream>
 
 TEST(YogaTest, copy_style_same) {
-  const YGNodeRef node0 = YGNodeNew();
-  const YGNodeRef node1 = YGNodeNew();
+  const BNDYGNodeRef node0 = BNDYGNodeNew();
+  const BNDYGNodeRef node1 = BNDYGNodeNew();
   ASSERT_FALSE(node0->isDirty());
 
-  YGNodeCopyStyle(node0, node1);
+  BNDYGNodeCopyStyle(node0, node1);
   ASSERT_FALSE(node0->isDirty());
 
-  YGNodeFree(node0);
-  YGNodeFree(node1);
+  BNDYGNodeFree(node0);
+  BNDYGNodeFree(node1);
 }
 
 TEST(YogaTest, copy_style_modified) {
-  const YGNodeRef node0 = YGNodeNew();
+  const BNDYGNodeRef node0 = BNDYGNodeNew();
   ASSERT_FALSE(node0->isDirty());
-  ASSERT_EQ(YGFlexDirectionColumn, YGNodeStyleGetFlexDirection(node0));
-  ASSERT_FALSE(YGNodeStyleGetMaxHeight(node0).unit != YGUnitUndefined);
+  ASSERT_EQ(BNDYGFlexDirectionColumn, BNDYGNodeStyleGetFlexDirection(node0));
+  ASSERT_FALSE(BNDYGNodeStyleGetMaxHeight(node0).unit != BNDYGUnitUndefined);
 
-  const YGNodeRef node1 = YGNodeNew();
-  YGNodeStyleSetFlexDirection(node1, YGFlexDirectionRow);
-  YGNodeStyleSetMaxHeight(node1, 10);
+  const BNDYGNodeRef node1 = BNDYGNodeNew();
+  BNDYGNodeStyleSetFlexDirection(node1, BNDYGFlexDirectionRow);
+  BNDYGNodeStyleSetMaxHeight(node1, 10);
 
-  YGNodeCopyStyle(node0, node1);
+  BNDYGNodeCopyStyle(node0, node1);
   ASSERT_TRUE(node0->isDirty());
-  ASSERT_EQ(YGFlexDirectionRow, YGNodeStyleGetFlexDirection(node0));
-  ASSERT_FLOAT_EQ(10, YGNodeStyleGetMaxHeight(node0).value);
+  ASSERT_EQ(BNDYGFlexDirectionRow, BNDYGNodeStyleGetFlexDirection(node0));
+  ASSERT_FLOAT_EQ(10, BNDYGNodeStyleGetMaxHeight(node0).value);
 
-  YGNodeFree(node0);
-  YGNodeFree(node1);
+  BNDYGNodeFree(node0);
+  BNDYGNodeFree(node1);
 }
 
 TEST(YogaTest, copy_style_modified_same) {
-  const YGNodeRef node0 = YGNodeNew();
-  YGNodeStyleSetFlexDirection(node0, YGFlexDirectionRow);
-  YGNodeStyleSetMaxHeight(node0, 10);
-  YGNodeCalculateLayout(node0, YGUndefined, YGUndefined, YGDirectionLTR);
+  const BNDYGNodeRef node0 = BNDYGNodeNew();
+  BNDYGNodeStyleSetFlexDirection(node0, BNDYGFlexDirectionRow);
+  BNDYGNodeStyleSetMaxHeight(node0, 10);
+  BNDYGNodeCalculateLayout(node0, BNDYGUndefined, BNDYGUndefined, BNDYGDirectionLTR);
   ASSERT_FALSE(node0->isDirty());
 
-  const YGNodeRef node1 = YGNodeNew();
-  YGNodeStyleSetFlexDirection(node1, YGFlexDirectionRow);
-  YGNodeStyleSetMaxHeight(node1, 10);
+  const BNDYGNodeRef node1 = BNDYGNodeNew();
+  BNDYGNodeStyleSetFlexDirection(node1, BNDYGFlexDirectionRow);
+  BNDYGNodeStyleSetMaxHeight(node1, 10);
 
-  YGNodeCopyStyle(node0, node1);
+  BNDYGNodeCopyStyle(node0, node1);
   ASSERT_FALSE(node0->isDirty());
 
-  YGNodeFree(node0);
-  YGNodeFree(node1);
+  BNDYGNodeFree(node0);
+  BNDYGNodeFree(node1);
 }
 
 TEST(YogaTest, initialise_flexShrink_flexGrow) {
-  const YGNodeRef node0 = YGNodeNew();
-  YGNodeStyleSetFlexShrink(node0, 1);
-  ASSERT_EQ(1, YGNodeStyleGetFlexShrink(node0));
+  const BNDYGNodeRef node0 = BNDYGNodeNew();
+  BNDYGNodeStyleSetFlexShrink(node0, 1);
+  ASSERT_EQ(1, BNDYGNodeStyleGetFlexShrink(node0));
 
-  YGNodeStyleSetFlexShrink(node0, YGUndefined);
-  YGNodeStyleSetFlexGrow(node0, 3);
+  BNDYGNodeStyleSetFlexShrink(node0, BNDYGUndefined);
+  BNDYGNodeStyleSetFlexGrow(node0, 3);
   ASSERT_EQ(
       0,
-      YGNodeStyleGetFlexShrink(
+      BNDYGNodeStyleGetFlexShrink(
           node0)); // Default value is Zero, if flex shrink is not defined
-  ASSERT_EQ(3, YGNodeStyleGetFlexGrow(node0));
+  ASSERT_EQ(3, BNDYGNodeStyleGetFlexGrow(node0));
 
-  YGNodeStyleSetFlexGrow(node0, YGUndefined);
-  YGNodeStyleSetFlexShrink(node0, 3);
+  BNDYGNodeStyleSetFlexGrow(node0, BNDYGUndefined);
+  BNDYGNodeStyleSetFlexShrink(node0, 3);
   ASSERT_EQ(
       0,
-      YGNodeStyleGetFlexGrow(
+      BNDYGNodeStyleGetFlexGrow(
           node0)); // Default value is Zero, if flex grow is not defined
-  ASSERT_EQ(3, YGNodeStyleGetFlexShrink(node0));
-  YGNodeFree(node0);
+  ASSERT_EQ(3, BNDYGNodeStyleGetFlexShrink(node0));
+  BNDYGNodeFree(node0);
 }

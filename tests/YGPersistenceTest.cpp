@@ -6,243 +6,243 @@
  */
 
 #include <gtest/gtest.h>
-#include <yoga/Yoga.h>
+#include <bindyoga/BindYoga.h>
 
 TEST(YogaTest, cloning_shared_root) {
-  const YGConfigRef config = YGConfigNew();
+  const BNDYGConfigRef config = BNDYGConfigNew();
 
-  const YGNodeRef root = YGNodeNewWithConfig(config);
-  YGNodeStyleSetWidth(root, 100);
-  YGNodeStyleSetHeight(root, 100);
+  const BNDYGNodeRef root = BNDYGNodeNewWithConfig(config);
+  BNDYGNodeStyleSetWidth(root, 100);
+  BNDYGNodeStyleSetHeight(root, 100);
 
-  const YGNodeRef root_child0 = YGNodeNewWithConfig(config);
-  YGNodeStyleSetFlexGrow(root_child0, 1);
-  YGNodeStyleSetFlexBasis(root_child0, 50);
-  YGNodeInsertChild(root, root_child0, 0);
+  const BNDYGNodeRef root_child0 = BNDYGNodeNewWithConfig(config);
+  BNDYGNodeStyleSetFlexGrow(root_child0, 1);
+  BNDYGNodeStyleSetFlexBasis(root_child0, 50);
+  BNDYGNodeInsertChild(root, root_child0, 0);
 
-  const YGNodeRef root_child1 = YGNodeNewWithConfig(config);
-  YGNodeStyleSetFlexGrow(root_child1, 1);
-  YGNodeInsertChild(root, root_child1, 1);
-  YGNodeCalculateLayout(root, YGUndefined, YGUndefined, YGDirectionLTR);
+  const BNDYGNodeRef root_child1 = BNDYGNodeNewWithConfig(config);
+  BNDYGNodeStyleSetFlexGrow(root_child1, 1);
+  BNDYGNodeInsertChild(root, root_child1, 1);
+  BNDYGNodeCalculateLayout(root, BNDYGUndefined, BNDYGUndefined, BNDYGDirectionLTR);
 
-  ASSERT_FLOAT_EQ(0, YGNodeLayoutGetLeft(root));
-  ASSERT_FLOAT_EQ(0, YGNodeLayoutGetTop(root));
-  ASSERT_FLOAT_EQ(100, YGNodeLayoutGetWidth(root));
-  ASSERT_FLOAT_EQ(100, YGNodeLayoutGetHeight(root));
+  ASSERT_FLOAT_EQ(0, BNDYGNodeLayoutGetLeft(root));
+  ASSERT_FLOAT_EQ(0, BNDYGNodeLayoutGetTop(root));
+  ASSERT_FLOAT_EQ(100, BNDYGNodeLayoutGetWidth(root));
+  ASSERT_FLOAT_EQ(100, BNDYGNodeLayoutGetHeight(root));
 
-  ASSERT_FLOAT_EQ(0, YGNodeLayoutGetLeft(root_child0));
-  ASSERT_FLOAT_EQ(0, YGNodeLayoutGetTop(root_child0));
-  ASSERT_FLOAT_EQ(100, YGNodeLayoutGetWidth(root_child0));
-  ASSERT_FLOAT_EQ(75, YGNodeLayoutGetHeight(root_child0));
+  ASSERT_FLOAT_EQ(0, BNDYGNodeLayoutGetLeft(root_child0));
+  ASSERT_FLOAT_EQ(0, BNDYGNodeLayoutGetTop(root_child0));
+  ASSERT_FLOAT_EQ(100, BNDYGNodeLayoutGetWidth(root_child0));
+  ASSERT_FLOAT_EQ(75, BNDYGNodeLayoutGetHeight(root_child0));
 
-  ASSERT_FLOAT_EQ(0, YGNodeLayoutGetLeft(root_child1));
-  ASSERT_FLOAT_EQ(75, YGNodeLayoutGetTop(root_child1));
-  ASSERT_FLOAT_EQ(100, YGNodeLayoutGetWidth(root_child1));
-  ASSERT_FLOAT_EQ(25, YGNodeLayoutGetHeight(root_child1));
+  ASSERT_FLOAT_EQ(0, BNDYGNodeLayoutGetLeft(root_child1));
+  ASSERT_FLOAT_EQ(75, BNDYGNodeLayoutGetTop(root_child1));
+  ASSERT_FLOAT_EQ(100, BNDYGNodeLayoutGetWidth(root_child1));
+  ASSERT_FLOAT_EQ(25, BNDYGNodeLayoutGetHeight(root_child1));
 
-  const YGNodeRef root2 = YGNodeClone(root);
-  YGNodeStyleSetWidth(root2, 100);
+  const BNDYGNodeRef root2 = BNDYGNodeClone(root);
+  BNDYGNodeStyleSetWidth(root2, 100);
 
-  ASSERT_EQ(2, YGNodeGetChildCount(root2));
+  ASSERT_EQ(2, BNDYGNodeGetChildCount(root2));
   // The children should have referential equality at this point.
-  ASSERT_EQ(root_child0, YGNodeGetChild(root2, 0));
-  ASSERT_EQ(root_child1, YGNodeGetChild(root2, 1));
+  ASSERT_EQ(root_child0, BNDYGNodeGetChild(root2, 0));
+  ASSERT_EQ(root_child1, BNDYGNodeGetChild(root2, 1));
 
-  YGNodeCalculateLayout(root2, YGUndefined, YGUndefined, YGDirectionLTR);
+  BNDYGNodeCalculateLayout(root2, BNDYGUndefined, BNDYGUndefined, BNDYGDirectionLTR);
 
-  ASSERT_EQ(2, YGNodeGetChildCount(root2));
+  ASSERT_EQ(2, BNDYGNodeGetChildCount(root2));
   // Relayout with no changed input should result in referential equality.
-  ASSERT_EQ(root_child0, YGNodeGetChild(root2, 0));
-  ASSERT_EQ(root_child1, YGNodeGetChild(root2, 1));
+  ASSERT_EQ(root_child0, BNDYGNodeGetChild(root2, 0));
+  ASSERT_EQ(root_child1, BNDYGNodeGetChild(root2, 1));
 
-  YGNodeStyleSetWidth(root2, 150);
-  YGNodeStyleSetHeight(root2, 200);
-  YGNodeCalculateLayout(root2, YGUndefined, YGUndefined, YGDirectionLTR);
+  BNDYGNodeStyleSetWidth(root2, 150);
+  BNDYGNodeStyleSetHeight(root2, 200);
+  BNDYGNodeCalculateLayout(root2, BNDYGUndefined, BNDYGUndefined, BNDYGDirectionLTR);
 
-  ASSERT_EQ(2, YGNodeGetChildCount(root2));
+  ASSERT_EQ(2, BNDYGNodeGetChildCount(root2));
   // Relayout with changed input should result in cloned children.
-  const YGNodeRef root2_child0 = YGNodeGetChild(root2, 0);
-  const YGNodeRef root2_child1 = YGNodeGetChild(root2, 1);
+  const BNDYGNodeRef root2_child0 = BNDYGNodeGetChild(root2, 0);
+  const BNDYGNodeRef root2_child1 = BNDYGNodeGetChild(root2, 1);
   ASSERT_NE(root_child0, root2_child0);
   ASSERT_NE(root_child1, root2_child1);
 
   // Everything in the root should remain unchanged.
-  ASSERT_FLOAT_EQ(0, YGNodeLayoutGetLeft(root));
-  ASSERT_FLOAT_EQ(0, YGNodeLayoutGetTop(root));
-  ASSERT_FLOAT_EQ(100, YGNodeLayoutGetWidth(root));
-  ASSERT_FLOAT_EQ(100, YGNodeLayoutGetHeight(root));
+  ASSERT_FLOAT_EQ(0, BNDYGNodeLayoutGetLeft(root));
+  ASSERT_FLOAT_EQ(0, BNDYGNodeLayoutGetTop(root));
+  ASSERT_FLOAT_EQ(100, BNDYGNodeLayoutGetWidth(root));
+  ASSERT_FLOAT_EQ(100, BNDYGNodeLayoutGetHeight(root));
 
-  ASSERT_FLOAT_EQ(0, YGNodeLayoutGetLeft(root_child0));
-  ASSERT_FLOAT_EQ(0, YGNodeLayoutGetTop(root_child0));
-  ASSERT_FLOAT_EQ(100, YGNodeLayoutGetWidth(root_child0));
-  ASSERT_FLOAT_EQ(75, YGNodeLayoutGetHeight(root_child0));
+  ASSERT_FLOAT_EQ(0, BNDYGNodeLayoutGetLeft(root_child0));
+  ASSERT_FLOAT_EQ(0, BNDYGNodeLayoutGetTop(root_child0));
+  ASSERT_FLOAT_EQ(100, BNDYGNodeLayoutGetWidth(root_child0));
+  ASSERT_FLOAT_EQ(75, BNDYGNodeLayoutGetHeight(root_child0));
 
-  ASSERT_FLOAT_EQ(0, YGNodeLayoutGetLeft(root_child1));
-  ASSERT_FLOAT_EQ(75, YGNodeLayoutGetTop(root_child1));
-  ASSERT_FLOAT_EQ(100, YGNodeLayoutGetWidth(root_child1));
-  ASSERT_FLOAT_EQ(25, YGNodeLayoutGetHeight(root_child1));
+  ASSERT_FLOAT_EQ(0, BNDYGNodeLayoutGetLeft(root_child1));
+  ASSERT_FLOAT_EQ(75, BNDYGNodeLayoutGetTop(root_child1));
+  ASSERT_FLOAT_EQ(100, BNDYGNodeLayoutGetWidth(root_child1));
+  ASSERT_FLOAT_EQ(25, BNDYGNodeLayoutGetHeight(root_child1));
 
   // The new root now has new layout.
-  ASSERT_FLOAT_EQ(0, YGNodeLayoutGetLeft(root2));
-  ASSERT_FLOAT_EQ(0, YGNodeLayoutGetTop(root2));
-  ASSERT_FLOAT_EQ(150, YGNodeLayoutGetWidth(root2));
-  ASSERT_FLOAT_EQ(200, YGNodeLayoutGetHeight(root2));
+  ASSERT_FLOAT_EQ(0, BNDYGNodeLayoutGetLeft(root2));
+  ASSERT_FLOAT_EQ(0, BNDYGNodeLayoutGetTop(root2));
+  ASSERT_FLOAT_EQ(150, BNDYGNodeLayoutGetWidth(root2));
+  ASSERT_FLOAT_EQ(200, BNDYGNodeLayoutGetHeight(root2));
 
-  ASSERT_FLOAT_EQ(0, YGNodeLayoutGetLeft(root2_child0));
-  ASSERT_FLOAT_EQ(0, YGNodeLayoutGetTop(root2_child0));
-  ASSERT_FLOAT_EQ(150, YGNodeLayoutGetWidth(root2_child0));
-  ASSERT_FLOAT_EQ(125, YGNodeLayoutGetHeight(root2_child0));
+  ASSERT_FLOAT_EQ(0, BNDYGNodeLayoutGetLeft(root2_child0));
+  ASSERT_FLOAT_EQ(0, BNDYGNodeLayoutGetTop(root2_child0));
+  ASSERT_FLOAT_EQ(150, BNDYGNodeLayoutGetWidth(root2_child0));
+  ASSERT_FLOAT_EQ(125, BNDYGNodeLayoutGetHeight(root2_child0));
 
-  ASSERT_FLOAT_EQ(0, YGNodeLayoutGetLeft(root2_child1));
-  ASSERT_FLOAT_EQ(125, YGNodeLayoutGetTop(root2_child1));
-  ASSERT_FLOAT_EQ(150, YGNodeLayoutGetWidth(root2_child1));
-  ASSERT_FLOAT_EQ(75, YGNodeLayoutGetHeight(root2_child1));
+  ASSERT_FLOAT_EQ(0, BNDYGNodeLayoutGetLeft(root2_child1));
+  ASSERT_FLOAT_EQ(125, BNDYGNodeLayoutGetTop(root2_child1));
+  ASSERT_FLOAT_EQ(150, BNDYGNodeLayoutGetWidth(root2_child1));
+  ASSERT_FLOAT_EQ(75, BNDYGNodeLayoutGetHeight(root2_child1));
 
-  YGNodeFreeRecursive(root2);
+  BNDYGNodeFreeRecursive(root2);
 
-  YGNodeFreeRecursive(root);
+  BNDYGNodeFreeRecursive(root);
 
-  YGConfigFree(config);
+  BNDYGConfigFree(config);
 }
 
 TEST(YogaTest, mutating_children_of_a_clone_clones) {
-  const YGConfigRef config = YGConfigNew();
+  const BNDYGConfigRef config = BNDYGConfigNew();
 
-  const YGNodeRef root = YGNodeNewWithConfig(config);
-  ASSERT_EQ(0, YGNodeGetChildCount(root));
+  const BNDYGNodeRef root = BNDYGNodeNewWithConfig(config);
+  ASSERT_EQ(0, BNDYGNodeGetChildCount(root));
 
-  const YGNodeRef root2 = YGNodeClone(root);
-  ASSERT_EQ(0, YGNodeGetChildCount(root2));
+  const BNDYGNodeRef root2 = BNDYGNodeClone(root);
+  ASSERT_EQ(0, BNDYGNodeGetChildCount(root2));
 
-  const YGNodeRef root2_child0 = YGNodeNewWithConfig(config);
-  YGNodeInsertChild(root2, root2_child0, 0);
+  const BNDYGNodeRef root2_child0 = BNDYGNodeNewWithConfig(config);
+  BNDYGNodeInsertChild(root2, root2_child0, 0);
 
-  ASSERT_EQ(0, YGNodeGetChildCount(root));
-  ASSERT_EQ(1, YGNodeGetChildCount(root2));
+  ASSERT_EQ(0, BNDYGNodeGetChildCount(root));
+  ASSERT_EQ(1, BNDYGNodeGetChildCount(root2));
 
-  const YGNodeRef root3 = YGNodeClone(root2);
-  ASSERT_EQ(1, YGNodeGetChildCount(root2));
-  ASSERT_EQ(1, YGNodeGetChildCount(root3));
-  ASSERT_EQ(YGNodeGetChild(root2, 0), YGNodeGetChild(root3, 0));
+  const BNDYGNodeRef root3 = BNDYGNodeClone(root2);
+  ASSERT_EQ(1, BNDYGNodeGetChildCount(root2));
+  ASSERT_EQ(1, BNDYGNodeGetChildCount(root3));
+  ASSERT_EQ(BNDYGNodeGetChild(root2, 0), BNDYGNodeGetChild(root3, 0));
 
-  const YGNodeRef root3_child1 = YGNodeNewWithConfig(config);
-  YGNodeInsertChild(root3, root3_child1, 1);
-  ASSERT_EQ(1, YGNodeGetChildCount(root2));
-  ASSERT_EQ(2, YGNodeGetChildCount(root3));
-  ASSERT_EQ(root3_child1, YGNodeGetChild(root3, 1));
-  ASSERT_NE(YGNodeGetChild(root2, 0), YGNodeGetChild(root3, 0));
+  const BNDYGNodeRef root3_child1 = BNDYGNodeNewWithConfig(config);
+  BNDYGNodeInsertChild(root3, root3_child1, 1);
+  ASSERT_EQ(1, BNDYGNodeGetChildCount(root2));
+  ASSERT_EQ(2, BNDYGNodeGetChildCount(root3));
+  ASSERT_EQ(root3_child1, BNDYGNodeGetChild(root3, 1));
+  ASSERT_NE(BNDYGNodeGetChild(root2, 0), BNDYGNodeGetChild(root3, 0));
 
-  const YGNodeRef root4 = YGNodeClone(root3);
-  ASSERT_EQ(root3_child1, YGNodeGetChild(root4, 1));
+  const BNDYGNodeRef root4 = BNDYGNodeClone(root3);
+  ASSERT_EQ(root3_child1, BNDYGNodeGetChild(root4, 1));
 
-  YGNodeRemoveChild(root4, root3_child1);
-  ASSERT_EQ(2, YGNodeGetChildCount(root3));
-  ASSERT_EQ(1, YGNodeGetChildCount(root4));
-  ASSERT_NE(YGNodeGetChild(root3, 0), YGNodeGetChild(root4, 0));
+  BNDYGNodeRemoveChild(root4, root3_child1);
+  ASSERT_EQ(2, BNDYGNodeGetChildCount(root3));
+  ASSERT_EQ(1, BNDYGNodeGetChildCount(root4));
+  ASSERT_NE(BNDYGNodeGetChild(root3, 0), BNDYGNodeGetChild(root4, 0));
 
-  YGNodeFreeRecursive(root4);
-  YGNodeFreeRecursive(root3);
-  YGNodeFreeRecursive(root2);
-  YGNodeFreeRecursive(root);
+  BNDYGNodeFreeRecursive(root4);
+  BNDYGNodeFreeRecursive(root3);
+  BNDYGNodeFreeRecursive(root2);
+  BNDYGNodeFreeRecursive(root);
 
-  YGConfigFree(config);
+  BNDYGConfigFree(config);
 }
 
 TEST(YogaTest, cloning_two_levels) {
-  const YGConfigRef config = YGConfigNew();
+  const BNDYGConfigRef config = BNDYGConfigNew();
 
-  const YGNodeRef root = YGNodeNewWithConfig(config);
-  YGNodeStyleSetWidth(root, 100);
-  YGNodeStyleSetHeight(root, 100);
+  const BNDYGNodeRef root = BNDYGNodeNewWithConfig(config);
+  BNDYGNodeStyleSetWidth(root, 100);
+  BNDYGNodeStyleSetHeight(root, 100);
 
-  const YGNodeRef root_child0 = YGNodeNewWithConfig(config);
-  YGNodeStyleSetFlexGrow(root_child0, 1);
-  YGNodeStyleSetFlexBasis(root_child0, 15);
-  YGNodeInsertChild(root, root_child0, 0);
+  const BNDYGNodeRef root_child0 = BNDYGNodeNewWithConfig(config);
+  BNDYGNodeStyleSetFlexGrow(root_child0, 1);
+  BNDYGNodeStyleSetFlexBasis(root_child0, 15);
+  BNDYGNodeInsertChild(root, root_child0, 0);
 
-  const YGNodeRef root_child1 = YGNodeNewWithConfig(config);
-  YGNodeStyleSetFlexGrow(root_child1, 1);
-  YGNodeInsertChild(root, root_child1, 1);
+  const BNDYGNodeRef root_child1 = BNDYGNodeNewWithConfig(config);
+  BNDYGNodeStyleSetFlexGrow(root_child1, 1);
+  BNDYGNodeInsertChild(root, root_child1, 1);
 
-  const YGNodeRef root_child1_0 = YGNodeNewWithConfig(config);
-  YGNodeStyleSetFlexBasis(root_child1_0, 10);
-  YGNodeStyleSetFlexGrow(root_child1_0, 1);
-  YGNodeInsertChild(root_child1, root_child1_0, 0);
+  const BNDYGNodeRef root_child1_0 = BNDYGNodeNewWithConfig(config);
+  BNDYGNodeStyleSetFlexBasis(root_child1_0, 10);
+  BNDYGNodeStyleSetFlexGrow(root_child1_0, 1);
+  BNDYGNodeInsertChild(root_child1, root_child1_0, 0);
 
-  const YGNodeRef root_child1_1 = YGNodeNewWithConfig(config);
-  YGNodeStyleSetFlexBasis(root_child1_1, 25);
-  YGNodeInsertChild(root_child1, root_child1_1, 1);
+  const BNDYGNodeRef root_child1_1 = BNDYGNodeNewWithConfig(config);
+  BNDYGNodeStyleSetFlexBasis(root_child1_1, 25);
+  BNDYGNodeInsertChild(root_child1, root_child1_1, 1);
 
-  YGNodeCalculateLayout(root, YGUndefined, YGUndefined, YGDirectionLTR);
+  BNDYGNodeCalculateLayout(root, BNDYGUndefined, BNDYGUndefined, BNDYGDirectionLTR);
 
-  ASSERT_FLOAT_EQ(40, YGNodeLayoutGetHeight(root_child0));
-  ASSERT_FLOAT_EQ(60, YGNodeLayoutGetHeight(root_child1));
-  ASSERT_FLOAT_EQ(35, YGNodeLayoutGetHeight(root_child1_0));
-  ASSERT_FLOAT_EQ(25, YGNodeLayoutGetHeight(root_child1_1));
+  ASSERT_FLOAT_EQ(40, BNDYGNodeLayoutGetHeight(root_child0));
+  ASSERT_FLOAT_EQ(60, BNDYGNodeLayoutGetHeight(root_child1));
+  ASSERT_FLOAT_EQ(35, BNDYGNodeLayoutGetHeight(root_child1_0));
+  ASSERT_FLOAT_EQ(25, BNDYGNodeLayoutGetHeight(root_child1_1));
 
-  const YGNodeRef root2_child0 = YGNodeClone(root_child0);
-  const YGNodeRef root2_child1 = YGNodeClone(root_child1);
-  const YGNodeRef root2 = YGNodeClone(root);
+  const BNDYGNodeRef root2_child0 = BNDYGNodeClone(root_child0);
+  const BNDYGNodeRef root2_child1 = BNDYGNodeClone(root_child1);
+  const BNDYGNodeRef root2 = BNDYGNodeClone(root);
 
-  YGNodeStyleSetFlexGrow(root2_child0, 0);
-  YGNodeStyleSetFlexBasis(root2_child0, 40);
+  BNDYGNodeStyleSetFlexGrow(root2_child0, 0);
+  BNDYGNodeStyleSetFlexBasis(root2_child0, 40);
 
-  YGNodeRemoveAllChildren(root2);
-  YGNodeInsertChild(root2, root2_child0, 0);
-  YGNodeInsertChild(root2, root2_child1, 1);
-  ASSERT_EQ(2, YGNodeGetChildCount(root2));
+  BNDYGNodeRemoveAllChildren(root2);
+  BNDYGNodeInsertChild(root2, root2_child0, 0);
+  BNDYGNodeInsertChild(root2, root2_child1, 1);
+  ASSERT_EQ(2, BNDYGNodeGetChildCount(root2));
 
-  YGNodeCalculateLayout(root2, YGUndefined, YGUndefined, YGDirectionLTR);
+  BNDYGNodeCalculateLayout(root2, BNDYGUndefined, BNDYGUndefined, BNDYGDirectionLTR);
 
   // Original root is unchanged
-  ASSERT_FLOAT_EQ(40, YGNodeLayoutGetHeight(root_child0));
-  ASSERT_FLOAT_EQ(60, YGNodeLayoutGetHeight(root_child1));
-  ASSERT_FLOAT_EQ(35, YGNodeLayoutGetHeight(root_child1_0));
-  ASSERT_FLOAT_EQ(25, YGNodeLayoutGetHeight(root_child1_1));
+  ASSERT_FLOAT_EQ(40, BNDYGNodeLayoutGetHeight(root_child0));
+  ASSERT_FLOAT_EQ(60, BNDYGNodeLayoutGetHeight(root_child1));
+  ASSERT_FLOAT_EQ(35, BNDYGNodeLayoutGetHeight(root_child1_0));
+  ASSERT_FLOAT_EQ(25, BNDYGNodeLayoutGetHeight(root_child1_1));
 
   // New root has new layout at the top
-  ASSERT_FLOAT_EQ(40, YGNodeLayoutGetHeight(root2_child0));
-  ASSERT_FLOAT_EQ(60, YGNodeLayoutGetHeight(root2_child1));
+  ASSERT_FLOAT_EQ(40, BNDYGNodeLayoutGetHeight(root2_child0));
+  ASSERT_FLOAT_EQ(60, BNDYGNodeLayoutGetHeight(root2_child1));
 
   // The deeper children are untouched.
-  ASSERT_EQ(YGNodeGetChild(root2_child1, 0), root_child1_0);
-  ASSERT_EQ(YGNodeGetChild(root2_child1, 1), root_child1_1);
+  ASSERT_EQ(BNDYGNodeGetChild(root2_child1, 0), root_child1_0);
+  ASSERT_EQ(BNDYGNodeGetChild(root2_child1, 1), root_child1_1);
 
-  YGNodeFreeRecursive(root2);
-  YGNodeFreeRecursive(root);
+  BNDYGNodeFreeRecursive(root2);
+  BNDYGNodeFreeRecursive(root);
 
-  YGConfigFree(config);
+  BNDYGConfigFree(config);
 }
 
 TEST(YogaTest, cloning_and_freeing) {
-  const int32_t initialInstanceCount = YGNodeGetInstanceCount();
+  const int32_t initialInstanceCount = BNDYGNodeGetInstanceCount();
 
-  const YGConfigRef config = YGConfigNew();
+  const BNDYGConfigRef config = BNDYGConfigNew();
 
-  const YGNodeRef root = YGNodeNewWithConfig(config);
-  YGNodeStyleSetWidth(root, 100);
-  YGNodeStyleSetHeight(root, 100);
-  const YGNodeRef root_child0 = YGNodeNewWithConfig(config);
-  YGNodeInsertChild(root, root_child0, 0);
-  const YGNodeRef root_child1 = YGNodeNewWithConfig(config);
-  YGNodeInsertChild(root, root_child1, 1);
+  const BNDYGNodeRef root = BNDYGNodeNewWithConfig(config);
+  BNDYGNodeStyleSetWidth(root, 100);
+  BNDYGNodeStyleSetHeight(root, 100);
+  const BNDYGNodeRef root_child0 = BNDYGNodeNewWithConfig(config);
+  BNDYGNodeInsertChild(root, root_child0, 0);
+  const BNDYGNodeRef root_child1 = BNDYGNodeNewWithConfig(config);
+  BNDYGNodeInsertChild(root, root_child1, 1);
 
-  YGNodeCalculateLayout(root, YGUndefined, YGUndefined, YGDirectionLTR);
+  BNDYGNodeCalculateLayout(root, BNDYGUndefined, BNDYGUndefined, BNDYGDirectionLTR);
 
-  const YGNodeRef root2 = YGNodeClone(root);
+  const BNDYGNodeRef root2 = BNDYGNodeClone(root);
 
   // Freeing the original root should be safe as long as we don't free its
   // children.
-  YGNodeFree(root);
+  BNDYGNodeFree(root);
 
-  YGNodeCalculateLayout(root2, YGUndefined, YGUndefined, YGDirectionLTR);
+  BNDYGNodeCalculateLayout(root2, BNDYGUndefined, BNDYGUndefined, BNDYGDirectionLTR);
 
-  YGNodeFreeRecursive(root2);
+  BNDYGNodeFreeRecursive(root2);
 
-  YGNodeFree(root_child0);
-  YGNodeFree(root_child1);
+  BNDYGNodeFree(root_child0);
+  BNDYGNodeFree(root_child1);
 
-  YGConfigFree(config);
+  BNDYGConfigFree(config);
 
-  ASSERT_EQ(initialInstanceCount, YGNodeGetInstanceCount());
+  ASSERT_EQ(initialInstanceCount, BNDYGNodeGetInstanceCount());
 }

@@ -6,23 +6,25 @@
  */
 
 #include <gtest/gtest.h>
-#include <yoga/Yoga.h>
+
+#include <bindyoga/BNDBNDYGNode.h>
+#include <bindyoga/BindYoga.h>
 
 TEST(YogaTest, pre_order_traversal) {
-  YGNodeRef const root = YGNodeNew();
-  YGNodeRef const root_child0 = YGNodeNew();
-  YGNodeRef const root_child1 = YGNodeNew();
-  YGNodeRef const root_child0_child0 = YGNodeNew();
+  BNDYGNodeRef const root = BNDYGNodeNew();
+  BNDYGNodeRef const root_child0 = BNDYGNodeNew();
+  BNDYGNodeRef const root_child1 = BNDYGNodeNew();
+  BNDYGNodeRef const root_child0_child0 = BNDYGNodeNew();
   
-  YGNodeSetChildren(root, {root_child0, root_child1});
-  YGNodeInsertChild(root_child0, root_child0_child0, 0);
+  BNDYGNodeSetChildren(root, {root_child0, root_child1});
+  BNDYGNodeInsertChild(root_child0, root_child0_child0, 0);
   
-  std::vector<YGNodeRef> visited;
-  YGTraversePreOrder(root, [&visited](YGNodeRef node) {
+  std::vector<BNDYGNodeRef> visited;
+  BNDYGTraversePreOrder(root, [&visited](BNDYGNodeRef node) {
     visited.push_back(node);
   });
   
-  const std::vector<YGNodeRef> expected = {
+  const std::vector<BNDYGNodeRef> expected = {
     root,
     root_child0,
     root_child0_child0,
@@ -30,5 +32,5 @@ TEST(YogaTest, pre_order_traversal) {
   };
   ASSERT_EQ(visited, expected);
 
-  YGNodeFreeRecursive(root);
+  BNDYGNodeFreeRecursive(root);
 }

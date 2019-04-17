@@ -6,125 +6,125 @@
  */
 
 #include <gtest/gtest.h>
-#include <yoga/YGNode.h>
-#include <yoga/Yoga.h>
+#include <bindyoga/BNDYGNode.h>
+#include <bindyoga/BindYoga.h>
 
-static YGSize _measureFloor(YGNodeRef node,
+static BNDYGSize _measureFloor(BNDYGNodeRef node,
                             float width,
-                            YGMeasureMode widthMode,
+                            BNDYGMeasureMode widthMode,
                             float height,
-                            YGMeasureMode heightMode) {
-  return YGSize{
+                            BNDYGMeasureMode heightMode) {
+  return BNDYGSize{
       width = 10.2f, height = 10.2f,
   };
 }
 
-static YGSize _measureCeil(YGNodeRef node,
+static BNDYGSize _measureCeil(BNDYGNodeRef node,
                            float width,
-                           YGMeasureMode widthMode,
+                           BNDYGMeasureMode widthMode,
                            float height,
-                           YGMeasureMode heightMode) {
-  return YGSize{
+                           BNDYGMeasureMode heightMode) {
+  return BNDYGSize{
       width = 10.5f, height = 10.5f,
   };
 }
 
-static YGSize _measureFractial(YGNodeRef node,
+static BNDYGSize _measureFractial(BNDYGNodeRef node,
   float width,
-  YGMeasureMode widthMode,
+  BNDYGMeasureMode widthMode,
   float height,
-  YGMeasureMode heightMode) {
-  return YGSize{
+  BNDYGMeasureMode heightMode) {
+  return BNDYGSize{
     width = 0.5f, height = 0.5f,
   };
 }
 
 TEST(YogaTest, rounding_feature_with_custom_measure_func_floor) {
-  const YGConfigRef config = YGConfigNew();
-  const YGNodeRef root = YGNodeNewWithConfig(config);
+  const BNDYGConfigRef config = BNDYGConfigNew();
+  const BNDYGNodeRef root = BNDYGNodeNewWithConfig(config);
 
-  const YGNodeRef root_child0 = YGNodeNewWithConfig(config);
+  const BNDYGNodeRef root_child0 = BNDYGNodeNewWithConfig(config);
   root_child0->setMeasureFunc(_measureFloor);
-  YGNodeInsertChild(root, root_child0, 0);
+  BNDYGNodeInsertChild(root, root_child0, 0);
 
-  YGConfigSetPointScaleFactor(config, 0.0f);
+  BNDYGConfigSetPointScaleFactor(config, 0.0f);
 
-  YGNodeCalculateLayout(root, YGUndefined, YGUndefined, YGDirectionRTL);
+  BNDYGNodeCalculateLayout(root, BNDYGUndefined, BNDYGUndefined, BNDYGDirectionRTL);
 
-  ASSERT_FLOAT_EQ(10.2, YGNodeLayoutGetWidth(root_child0));
-  ASSERT_FLOAT_EQ(10.2, YGNodeLayoutGetHeight(root_child0));
+  ASSERT_FLOAT_EQ(10.2, BNDYGNodeLayoutGetWidth(root_child0));
+  ASSERT_FLOAT_EQ(10.2, BNDYGNodeLayoutGetHeight(root_child0));
 
-  YGConfigSetPointScaleFactor(config, 1.0f);
+  BNDYGConfigSetPointScaleFactor(config, 1.0f);
 
-  YGNodeCalculateLayout(root, YGUndefined, YGUndefined, YGDirectionLTR);
+  BNDYGNodeCalculateLayout(root, BNDYGUndefined, BNDYGUndefined, BNDYGDirectionLTR);
 
-  ASSERT_FLOAT_EQ(11, YGNodeLayoutGetWidth(root_child0));
-  ASSERT_FLOAT_EQ(11, YGNodeLayoutGetHeight(root_child0));
+  ASSERT_FLOAT_EQ(11, BNDYGNodeLayoutGetWidth(root_child0));
+  ASSERT_FLOAT_EQ(11, BNDYGNodeLayoutGetHeight(root_child0));
 
-  YGConfigSetPointScaleFactor(config, 2.0f);
+  BNDYGConfigSetPointScaleFactor(config, 2.0f);
 
-  YGNodeCalculateLayout(root, YGUndefined, YGUndefined, YGDirectionRTL);
+  BNDYGNodeCalculateLayout(root, BNDYGUndefined, BNDYGUndefined, BNDYGDirectionRTL);
 
-  ASSERT_FLOAT_EQ(10.5, YGNodeLayoutGetWidth(root_child0));
-  ASSERT_FLOAT_EQ(10.5, YGNodeLayoutGetHeight(root_child0));
+  ASSERT_FLOAT_EQ(10.5, BNDYGNodeLayoutGetWidth(root_child0));
+  ASSERT_FLOAT_EQ(10.5, BNDYGNodeLayoutGetHeight(root_child0));
 
-  YGConfigSetPointScaleFactor(config, 4.0f);
+  BNDYGConfigSetPointScaleFactor(config, 4.0f);
 
-  YGNodeCalculateLayout(root, YGUndefined, YGUndefined, YGDirectionLTR);
+  BNDYGNodeCalculateLayout(root, BNDYGUndefined, BNDYGUndefined, BNDYGDirectionLTR);
 
-  ASSERT_FLOAT_EQ(10.25, YGNodeLayoutGetWidth(root_child0));
-  ASSERT_FLOAT_EQ(10.25, YGNodeLayoutGetHeight(root_child0));
+  ASSERT_FLOAT_EQ(10.25, BNDYGNodeLayoutGetWidth(root_child0));
+  ASSERT_FLOAT_EQ(10.25, BNDYGNodeLayoutGetHeight(root_child0));
 
-  YGConfigSetPointScaleFactor(config, 1.0f / 3.0f);
+  BNDYGConfigSetPointScaleFactor(config, 1.0f / 3.0f);
 
-  YGNodeCalculateLayout(root, YGUndefined, YGUndefined, YGDirectionRTL);
+  BNDYGNodeCalculateLayout(root, BNDYGUndefined, BNDYGUndefined, BNDYGDirectionRTL);
 
-  ASSERT_FLOAT_EQ(12.0, YGNodeLayoutGetWidth(root_child0));
-  ASSERT_FLOAT_EQ(12.0, YGNodeLayoutGetHeight(root_child0));
+  ASSERT_FLOAT_EQ(12.0, BNDYGNodeLayoutGetWidth(root_child0));
+  ASSERT_FLOAT_EQ(12.0, BNDYGNodeLayoutGetHeight(root_child0));
 
-  YGNodeFreeRecursive(root);
+  BNDYGNodeFreeRecursive(root);
 
-  YGConfigFree(config);
+  BNDYGConfigFree(config);
 }
 
 TEST(YogaTest, rounding_feature_with_custom_measure_func_ceil) {
-  const YGConfigRef config = YGConfigNew();
-  const YGNodeRef root = YGNodeNewWithConfig(config);
+  const BNDYGConfigRef config = BNDYGConfigNew();
+  const BNDYGNodeRef root = BNDYGNodeNewWithConfig(config);
 
-  const YGNodeRef root_child0 = YGNodeNewWithConfig(config);
+  const BNDYGNodeRef root_child0 = BNDYGNodeNewWithConfig(config);
   root_child0->setMeasureFunc(_measureCeil);
-  YGNodeInsertChild(root, root_child0, 0);
+  BNDYGNodeInsertChild(root, root_child0, 0);
 
-  YGConfigSetPointScaleFactor(config, 1.0f);
+  BNDYGConfigSetPointScaleFactor(config, 1.0f);
 
-  YGNodeCalculateLayout(root, YGUndefined, YGUndefined, YGDirectionLTR);
+  BNDYGNodeCalculateLayout(root, BNDYGUndefined, BNDYGUndefined, BNDYGDirectionLTR);
 
-  ASSERT_FLOAT_EQ(11, YGNodeLayoutGetWidth(root_child0));
-  ASSERT_FLOAT_EQ(11, YGNodeLayoutGetHeight(root_child0));
+  ASSERT_FLOAT_EQ(11, BNDYGNodeLayoutGetWidth(root_child0));
+  ASSERT_FLOAT_EQ(11, BNDYGNodeLayoutGetHeight(root_child0));
 
-  YGNodeFreeRecursive(root);
+  BNDYGNodeFreeRecursive(root);
 
-  YGConfigFree(config);
+  BNDYGConfigFree(config);
 }
 
 TEST(YogaTest, rounding_feature_with_custom_measure_and_fractial_matching_scale) {
-  const YGConfigRef config = YGConfigNew();
-  const YGNodeRef root = YGNodeNewWithConfig(config);
+  const BNDYGConfigRef config = BNDYGConfigNew();
+  const BNDYGNodeRef root = BNDYGNodeNewWithConfig(config);
 
-  const YGNodeRef root_child0 = YGNodeNewWithConfig(config);
-  YGNodeStyleSetPosition(root_child0, YGEdgeLeft, 73.625);
+  const BNDYGNodeRef root_child0 = BNDYGNodeNewWithConfig(config);
+  BNDYGNodeStyleSetPosition(root_child0, BNDYGEdgeLeft, 73.625);
   root_child0->setMeasureFunc(_measureFractial);
-  YGNodeInsertChild(root, root_child0, 0);
+  BNDYGNodeInsertChild(root, root_child0, 0);
 
-  YGConfigSetPointScaleFactor(config, 2.0f);
+  BNDYGConfigSetPointScaleFactor(config, 2.0f);
 
-  YGNodeCalculateLayout(root, YGUndefined, YGUndefined, YGDirectionLTR);
+  BNDYGNodeCalculateLayout(root, BNDYGUndefined, BNDYGUndefined, BNDYGDirectionLTR);
 
-  ASSERT_FLOAT_EQ(0.5, YGNodeLayoutGetWidth(root_child0));
-  ASSERT_FLOAT_EQ(0.5, YGNodeLayoutGetHeight(root_child0));
-  ASSERT_FLOAT_EQ(73.5, YGNodeLayoutGetLeft(root_child0));
+  ASSERT_FLOAT_EQ(0.5, BNDYGNodeLayoutGetWidth(root_child0));
+  ASSERT_FLOAT_EQ(0.5, BNDYGNodeLayoutGetHeight(root_child0));
+  ASSERT_FLOAT_EQ(73.5, BNDYGNodeLayoutGetLeft(root_child0));
 
-  YGNodeFreeRecursive(root);
+  BNDYGNodeFreeRecursive(root);
 
-  YGConfigFree(config);
+  BNDYGConfigFree(config);
 }
