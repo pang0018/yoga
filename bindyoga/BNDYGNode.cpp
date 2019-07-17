@@ -21,7 +21,7 @@ BNDYGFloatOptional BNDYGNode::getLeadingPosition(
   }
 
   const BNDYGValue* leadingPosition =
-      BNDYGComputedEdgeValue(style_.position, leading[axis], &BNDYGValueUndefined);
+      BNDYGComputedEdgeValue(style_.position, leadingBND[axis], &BNDYGValueUndefined);
 
   return leadingPosition->unit == BNDYGUnitUndefined
       ? BNDYGFloatOptional(0)
@@ -40,7 +40,7 @@ BNDYGFloatOptional BNDYGNode::getTrailingPosition(
   }
 
   const BNDYGValue* trailingPosition =
-      BNDYGComputedEdgeValue(style_.position, trailing[axis], &BNDYGValueUndefined);
+      BNDYGComputedEdgeValue(style_.position, trailingBND[axis], &BNDYGValueUndefined);
 
   return trailingPosition->unit == BNDYGUnitUndefined
       ? BNDYGFloatOptional(0)
@@ -51,7 +51,7 @@ bool BNDYGNode::isLeadingPositionDefined(const BNDYGFlexDirection& axis) const {
   return (BNDYGFlexDirectionIsRow(axis) &&
           BNDYGComputedEdgeValue(style_.position, BNDYGEdgeStart, &BNDYGValueUndefined)
                   ->unit != BNDYGUnitUndefined) ||
-      BNDYGComputedEdgeValue(style_.position, leading[axis], &BNDYGValueUndefined)
+      BNDYGComputedEdgeValue(style_.position, leadingBND[axis], &BNDYGValueUndefined)
           ->unit != BNDYGUnitUndefined;
 }
 
@@ -59,7 +59,7 @@ bool BNDYGNode::isTrailingPosDefined(const BNDYGFlexDirection& axis) const {
   return (BNDYGFlexDirectionIsRow(axis) &&
           BNDYGComputedEdgeValue(style_.position, BNDYGEdgeEnd, &BNDYGValueUndefined)
                   ->unit != BNDYGUnitUndefined) ||
-      BNDYGComputedEdgeValue(style_.position, trailing[axis], &BNDYGValueUndefined)
+      BNDYGComputedEdgeValue(style_.position, trailingBND[axis], &BNDYGValueUndefined)
           ->unit != BNDYGUnitUndefined;
 }
 
@@ -72,7 +72,7 @@ BNDYGFloatOptional BNDYGNode::getLeadingMargin(
   }
 
   return BNDYGResolveValueMargin(
-      *BNDYGComputedEdgeValue(style_.margin, leading[axis], &BNDYGValueZero),
+      *BNDYGComputedEdgeValue(style_.margin, leadingBND[axis], &BNDYGValueZero),
       widthSize);
 }
 
@@ -85,7 +85,7 @@ BNDYGFloatOptional BNDYGNode::getTrailingMargin(
   }
 
   return BNDYGResolveValueMargin(
-      *BNDYGComputedEdgeValue(style_.margin, trailing[axis], &BNDYGValueZero),
+      *BNDYGComputedEdgeValue(style_.margin, trailingBND[axis], &BNDYGValueZero),
       widthSize);
 }
 
@@ -239,19 +239,19 @@ void BNDYGNode::setPosition(
   setLayoutPosition(
       BNDYGUnwrapFloatOptional(
           getLeadingMargin(mainAxis, ownerWidth) + relativePositionMain),
-      leading[mainAxis]);
+      leadingBND[mainAxis]);
   setLayoutPosition(
       BNDYGUnwrapFloatOptional(
           getTrailingMargin(mainAxis, ownerWidth) + relativePositionMain),
-      trailing[mainAxis]);
+      trailingBND[mainAxis]);
   setLayoutPosition(
       BNDYGUnwrapFloatOptional(
           getLeadingMargin(crossAxis, ownerWidth) + relativePositionCross),
-      leading[crossAxis]);
+      leadingBND[crossAxis]);
   setLayoutPosition(
       BNDYGUnwrapFloatOptional(
           getTrailingMargin(crossAxis, ownerWidth) + relativePositionCross),
-      trailing[crossAxis]);
+      trailingBND[crossAxis]);
 }
 
 BNDYGNode::BNDYGNode()
@@ -357,7 +357,7 @@ BNDYGValue BNDYGNode::marginLeadingValue(const BNDYGFlexDirection axis) const {
       style_.margin[BNDYGEdgeStart].unit != BNDYGUnitUndefined) {
     return style_.margin[BNDYGEdgeStart];
   } else {
-    return style_.margin[leading[axis]];
+    return style_.margin[leadingBND[axis]];
   }
 }
 
@@ -366,7 +366,7 @@ BNDYGValue BNDYGNode::marginTrailingValue(const BNDYGFlexDirection axis) const {
       style_.margin[BNDYGEdgeEnd].unit != BNDYGUnitUndefined) {
     return style_.margin[BNDYGEdgeEnd];
   } else {
-    return style_.margin[trailing[axis]];
+    return style_.margin[trailingBND[axis]];
   }
 }
 
@@ -508,7 +508,7 @@ float BNDYGNode::getLeadingBorder(const BNDYGFlexDirection& axis) const {
   }
 
   float computedEdgeValue =
-      BNDYGComputedEdgeValue(style_.border, leading[axis], &BNDYGValueZero)->value;
+      BNDYGComputedEdgeValue(style_.border, leadingBND[axis], &BNDYGValueZero)->value;
   return BNDYGFloatMax(computedEdgeValue, 0.0f);
 }
 
@@ -521,7 +521,7 @@ float BNDYGNode::getTrailingBorder(const BNDYGFlexDirection& flexDirection) cons
   }
 
   float computedEdgeValue =
-      BNDYGComputedEdgeValue(style_.border, trailing[flexDirection], &BNDYGValueZero)
+      BNDYGComputedEdgeValue(style_.border, trailingBND[flexDirection], &BNDYGValueZero)
           ->value;
   return BNDYGFloatMax(computedEdgeValue, 0.0f);
 }
@@ -538,7 +538,7 @@ BNDYGFloatOptional BNDYGNode::getLeadingPadding(
   }
 
   BNDYGFloatOptional resolvedValue = BNDYGResolveValue(
-      *BNDYGComputedEdgeValue(style_.padding, leading[axis], &BNDYGValueZero),
+      *BNDYGComputedEdgeValue(style_.padding, leadingBND[axis], &BNDYGValueZero),
       widthSize);
   return BNDYGFloatOptionalMax(resolvedValue, BNDYGFloatOptional(0.0f));
 }
@@ -554,7 +554,7 @@ BNDYGFloatOptional BNDYGNode::getTrailingPadding(
   }
 
   BNDYGFloatOptional resolvedValue = BNDYGResolveValue(
-      *BNDYGComputedEdgeValue(style_.padding, trailing[axis], &BNDYGValueZero),
+      *BNDYGComputedEdgeValue(style_.padding, trailingBND[axis], &BNDYGValueZero),
       widthSize);
 
   return BNDYGFloatOptionalMax(resolvedValue, BNDYGFloatOptional(0.0f));

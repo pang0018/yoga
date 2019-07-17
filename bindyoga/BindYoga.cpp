@@ -213,7 +213,7 @@ void BNDYGNodeMarkDirtyAndPropogateToDescendants(const BNDYGNodeRef node) {
 }
 
 int32_t gNodeInstanceCount = 0;
-int32_t gConfigInstanceCount = 0;
+int32_t gBNDConfigInstanceCount = 0;
 
 WIN_EXPORT BNDYGNodeRef BNDYGNodeNewWithConfig(const BNDYGConfigRef config) {
   const BNDYGNodeRef node = new BNDYGNode();
@@ -255,7 +255,7 @@ static BNDYGConfigRef BNDYGConfigClone(const BNDYGConfig& oldConfig) {
   if (config == nullptr) {
     abort();
   }
-  gConfigInstanceCount++;
+  gBNDConfigInstanceCount++;
   return config;
 }
 
@@ -297,7 +297,7 @@ void BNDYGNodeFree(const BNDYGNodeRef node) {
 
 static void BNDYGConfigFreeRecursive(const BNDYGNodeRef root) {
   if (root->getConfig() != nullptr) {
-    gConfigInstanceCount--;
+    gBNDConfigInstanceCount--;
     delete root->getConfig();
   }
   // Delete configs recursively for childrens
@@ -344,7 +344,7 @@ int32_t BNDYGNodeGetInstanceCount(void) {
 }
 
 int32_t BNDYGConfigGetInstanceCount(void) {
-  return gConfigInstanceCount;
+  return gBNDConfigInstanceCount;
 }
 
 BNDYGConfigRef BNDYGConfigNew(void) {
@@ -353,13 +353,13 @@ BNDYGConfigRef BNDYGConfigNew(void) {
   #else
   const BNDYGConfigRef config = new BNDYGConfig(BNDYGDefaultLog);
   #endif
-  gConfigInstanceCount++;
+  gBNDConfigInstanceCount++;
   return config;
 }
 
 void BNDYGConfigFree(const BNDYGConfigRef config) {
   free(config);
-  gConfigInstanceCount--;
+  gBNDConfigInstanceCount--;
 }
 
 void BNDYGConfigCopy(const BNDYGConfigRef dest, const BNDYGConfigRef src) {
@@ -956,7 +956,7 @@ bool BNDYGNodeLayoutGetDidLegacyStretchFlagAffectLayout(const BNDYGNodeRef node)
   return node->getLayout().doesLegacyStretchFlagAffectsLayout;
 }
 
-uint32_t gCurrentGenerationCount = 0;
+uint32_t gBNDCurrentGenerationCount = 0;
 
 bool BNDYGLayoutNodeInternal(const BNDYGNodeRef node,
                           const float availableWidth,
@@ -981,10 +981,10 @@ void BNDYGNodePrint(const BNDYGNodeRef node, const BNDYGPrintOptions options) {
   BNDYGNodePrintInternal(node, options);
 }
 
-const std::array<BNDYGEdge, 4> leading = {
+const std::array<BNDYGEdge, 4> leadingBND = {
     {BNDYGEdgeTop, BNDYGEdgeBottom, BNDYGEdgeLeft, BNDYGEdgeRight}};
 
-const std::array<BNDYGEdge, 4> trailing = {
+const std::array<BNDYGEdge, 4> trailingBND = {
     {BNDYGEdgeBottom, BNDYGEdgeTop, BNDYGEdgeRight, BNDYGEdgeLeft}};
 static const std::array<BNDYGEdge, 4> pos = {{
     BNDYGEdgeTop,
@@ -1156,7 +1156,7 @@ static void BNDYGNodeSetChildTrailingPosition(const BNDYGNodeRef node,
   child->setLayoutPosition(
       node->getLayout().measuredDimensions[dim[axis]] - size -
           child->getLayout().position[pos[axis]],
-      trailing[axis]);
+      trailingBND[axis]);
 }
 
 static void BNDYGConstrainMaxSizeForMode(const BNDYGNodeRef node,
@@ -1217,7 +1217,7 @@ static void BNDYGNodeComputeFlexBasisForChild(const BNDYGNodeRef node,
         (BNDYGConfigIsExperimentalFeatureEnabled(
              child->getConfig(), BNDYGExperimentalFeatureWebFlexBasis) &&
          child->getLayout().computedFlexBasisGeneration !=
-             gCurrentGenerationCount)) {
+             gBNDCurrentGenerationCount)) {
       const BNDYGFloatOptional& paddingAndBorder = BNDYGFloatOptional(
           BNDYGNodePaddingAndBorderForAxis(child, mainAxis, ownerWidth));
       child->setLayoutComputedFlexBasis(
@@ -1357,7 +1357,7 @@ static void BNDYGNodeComputeFlexBasisForChild(const BNDYGNodeRef node,
         child->getLayout().measuredDimensions[dim[mainAxis]],
         BNDYGNodePaddingAndBorderForAxis(child, mainAxis, ownerWidth))));
   }
-  child->setLayoutComputedFlexBasisGeneration(gCurrentGenerationCount);
+  child->setLayoutComputedFlexBasisGeneration(gBNDCurrentGenerationCount);
 }
 
 static void BNDYGNodeAbsoluteLayoutChild(const BNDYGNodeRef node,
@@ -1495,7 +1495,7 @@ static void BNDYGNodeAbsoluteLayoutChild(const BNDYGNodeRef node,
             BNDYGUnwrapFloatOptional(child->getTrailingMargin(mainAxis, width)) -
             BNDYGUnwrapFloatOptional(child->getTrailingPosition(
                 mainAxis, isMainAxisRow ? width : height)),
-        leading[mainAxis]);
+        leadingBND[mainAxis]);
   } else if (
       !child->isLeadingPositionDefined(mainAxis) &&
       node->getStyle().justifyContent == BNDYGJustifyCenter) {
@@ -1503,14 +1503,14 @@ static void BNDYGNodeAbsoluteLayoutChild(const BNDYGNodeRef node,
         (node->getLayout().measuredDimensions[dim[mainAxis]] -
          child->getLayout().measuredDimensions[dim[mainAxis]]) /
             2.0f,
-        leading[mainAxis]);
+        leadingBND[mainAxis]);
   } else if (
       !child->isLeadingPositionDefined(mainAxis) &&
       node->getStyle().justifyContent == BNDYGJustifyFlexEnd) {
     child->setLayoutPosition(
         (node->getLayout().measuredDimensions[dim[mainAxis]] -
          child->getLayout().measuredDimensions[dim[mainAxis]]),
-        leading[mainAxis]);
+        leadingBND[mainAxis]);
   }
 
   if (child->isTrailingPosDefined(crossAxis) &&
@@ -1522,7 +1522,7 @@ static void BNDYGNodeAbsoluteLayoutChild(const BNDYGNodeRef node,
             BNDYGUnwrapFloatOptional(child->getTrailingMargin(crossAxis, width)) -
             BNDYGUnwrapFloatOptional(child->getTrailingPosition(
                 crossAxis, isMainAxisRow ? height : width)),
-        leading[crossAxis]);
+        leadingBND[crossAxis]);
 
   } else if (
       !child->isLeadingPositionDefined(crossAxis) &&
@@ -1531,7 +1531,7 @@ static void BNDYGNodeAbsoluteLayoutChild(const BNDYGNodeRef node,
         (node->getLayout().measuredDimensions[dim[crossAxis]] -
          child->getLayout().measuredDimensions[dim[crossAxis]]) /
             2.0f,
-        leading[crossAxis]);
+        leadingBND[crossAxis]);
   } else if (
       !child->isLeadingPositionDefined(crossAxis) &&
       ((BNDYGNodeAlignItem(node, child) == BNDYGAlignFlexEnd) ^
@@ -1539,7 +1539,7 @@ static void BNDYGNodeAbsoluteLayoutChild(const BNDYGNodeRef node,
     child->setLayoutPosition(
         (node->getLayout().measuredDimensions[dim[crossAxis]] -
          child->getLayout().measuredDimensions[dim[crossAxis]]),
-        leading[crossAxis]);
+        leadingBND[crossAxis]);
   }
 }
 
@@ -1824,7 +1824,7 @@ static void BNDYGNodeComputeFlexBasisForChildren(
       continue;
     }
     if (child == singleFlexChild) {
-      child->setLayoutComputedFlexBasisGeneration(gCurrentGenerationCount);
+      child->setLayoutComputedFlexBasisGeneration(gBNDCurrentGenerationCount);
       child->setLayoutComputedFlexBasis(BNDYGFloatOptional(0));
     } else {
       BNDYGNodeComputeFlexBasisForChild(
@@ -3341,10 +3341,10 @@ static void BNDYGNodelayoutImpl(const BNDYGNodeRef node,
   }
 }
 
-uint32_t gDepth = 0;
+uint32_t gBNDDepth = 0;
 bool gPrintTree = false;
-bool gPrintChanges = false;
-bool gPrintSkips = false;
+bool gBNDPrintChanges = false;
+bool gBNDPrintSkips = false;
 
 static const char *spacer = "                                                            ";
 
@@ -3512,10 +3512,10 @@ bool BNDYGLayoutNodeInternal(const BNDYGNodeRef node,
                           const BNDYGConfigRef config) {
   BNDYGLayout* layout = &node->getLayout();
 
-  gDepth++;
+  gBNDDepth++;
 
   const bool needToVisitNode =
-      (node->isDirty() && layout->generationCount != gCurrentGenerationCount) ||
+      (node->isDirty() && layout->generationCount != gBNDCurrentGenerationCount) ||
       layout->lastOwnerDirection != ownerDirection;
 
   if (needToVisitNode) {
@@ -3606,8 +3606,8 @@ bool BNDYGLayoutNodeInternal(const BNDYGNodeRef node,
     layout->measuredDimensions[BNDYGDimensionWidth] = cachedResults->computedWidth;
     layout->measuredDimensions[BNDYGDimensionHeight] = cachedResults->computedHeight;
 
-    if (gPrintChanges && gPrintSkips) {
-      BNDYGLog(node, BNDYGLogLevelVerbose, "%s%d.{[skipped] ", BNDYGSpacer(gDepth), gDepth);
+    if (gBNDPrintChanges && gBNDPrintSkips) {
+      BNDYGLog(node, BNDYGLogLevelVerbose, "%s%d.{[skipped] ", BNDYGSpacer(gBNDDepth), gBNDDepth);
       if (node->getPrintFunc() != nullptr) {
         node->getPrintFunc()(node);
       }
@@ -3624,13 +3624,13 @@ bool BNDYGLayoutNodeInternal(const BNDYGNodeRef node,
           reason);
     }
   } else {
-    if (gPrintChanges) {
+    if (gBNDPrintChanges) {
       BNDYGLog(
           node,
           BNDYGLogLevelVerbose,
           "%s%d.{%s",
-          BNDYGSpacer(gDepth),
-          gDepth,
+          BNDYGSpacer(gBNDDepth),
+          gBNDDepth,
           needToVisitNode ? "*" : "");
       if (node->getPrintFunc() != nullptr) {
         node->getPrintFunc()(node);
@@ -3657,13 +3657,13 @@ bool BNDYGLayoutNodeInternal(const BNDYGNodeRef node,
                      performLayout,
                      config);
 
-    if (gPrintChanges) {
+    if (gBNDPrintChanges) {
       BNDYGLog(
           node,
           BNDYGLogLevelVerbose,
           "%s%d.}%s",
-          BNDYGSpacer(gDepth),
-          gDepth,
+          BNDYGSpacer(gBNDDepth),
+          gBNDDepth,
           needToVisitNode ? "*" : "");
       if (node->getPrintFunc() != nullptr) {
         node->getPrintFunc()(node);
@@ -3683,7 +3683,7 @@ bool BNDYGLayoutNodeInternal(const BNDYGNodeRef node,
 
     if (cachedResults == nullptr) {
       if (layout->nextCachedMeasurementsIndex == BNDYG_MAX_CACHED_RESULT_COUNT) {
-        if (gPrintChanges) {
+        if (gBNDPrintChanges) {
           BNDYGLog(node, BNDYGLogLevelVerbose, "Out of cache entries!\n");
         }
         layout->nextCachedMeasurementsIndex = 0;
@@ -3720,8 +3720,8 @@ bool BNDYGLayoutNodeInternal(const BNDYGNodeRef node,
     node->setDirty(false);
   }
 
-  gDepth--;
-  layout->generationCount = gCurrentGenerationCount;
+  gBNDDepth--;
+  layout->generationCount = gBNDCurrentGenerationCount;
   return (needToVisitNode || cachedResults == nullptr);
 }
 
@@ -3817,7 +3817,7 @@ void BNDYGNodeCalculateLayout(
   // all dirty nodes at least once. Subsequent visits will be skipped if the
   // input
   // parameters don't change.
-  gCurrentGenerationCount++;
+  gBNDCurrentGenerationCount++;
   node->resolveDimension();
   float width = BNDYGUndefined;
   BNDYGMeasureMode widthMeasureMode = BNDYGMeasureModeUndefined;
@@ -3897,7 +3897,7 @@ void BNDYGNodeCalculateLayout(
     originalNode->resolveDimension();
     // Recursively mark nodes as dirty
     originalNode->markDirtyAndPropogateDownwards();
-    gCurrentGenerationCount++;
+    gBNDCurrentGenerationCount++;
     // Rerun the layout, and calculate the diff
     originalNode->setAndPropogateUseLegacyFlag(false);
     if (BNDYGLayoutNodeInternal(

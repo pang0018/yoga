@@ -23,8 +23,8 @@ WIN_EXPORT float BNDYGRoundValueToPixelGrid(const float value,
 
 BNDYG_EXTERN_C_END
 
-extern const std::array<BNDYGEdge, 4> trailing;
-extern const std::array<BNDYGEdge, 4> leading;
+extern const std::array<BNDYGEdge, 4> trailingBND;
+extern const std::array<BNDYGEdge, 4> leadingBND;
 extern bool BNDYGValueEqual(const BNDYGValue a, const BNDYGValue b);
 extern const BNDYGValue BNDYGValueUndefined;
 extern const BNDYGValue BNDYGValueAuto;
